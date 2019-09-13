@@ -1,1 +1,0 @@
-# durenmedan.github.io
