@@ -80,6 +80,14 @@
 	  P = SKG
 	  A = SM
 	  L = LBCV
+	    <div id="style-selector-control" class="map-control">
+      <input type="radio" name="show-hide" id="hide-poi"
+          class="selector-control">
+      <label for="hide-poi">Hide</label>
+      <input type="radio" name="show-hide" id="show-poi"
+          class="selector-control" checked="checked">
+      <label for="show-poi">Show</label>
+    </div>
     </div>
     <div style="display: none">
         <input id="pac-input"
@@ -88,51 +96,63 @@
                placeholder="Enter a location">
     </div>
     <div id="map"></div>
-	    <div id="infowindow-content">
-        <span id="place-name" class="title"></span><br>
-        <strong>Place ID:</strong> <span id="place-id"></span><br>
-        <span id="place-address"></span>
-    </div>
     <script>
-	  var lbcvicon = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-	  var smicon = 'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png';
-	  var skgicon = 'https://maps.google.com/mapfiles/kml/shapes/library_maps.png';
       var map, heatmap, infoWindow;
 
       function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
+        var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 13,
-          center: {lat: 3.663654700703944, lng: 98.50680790046432}, //lokasi
-          mapTypeId: 'satellite'		
+          center: {lat: 4.017443, lng: 98.273883}, //lokasi
+          mapTypeId: 'hybrid'  
         });
-		var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+		var lbcvicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/lbcvicon.png';
+		var smicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/smicon.png';
+		var skgicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/skgicon.png';
         var icons = {
           sm: {
             name: 'StasiunMetering',
-            icon: iconBase + 'parking_lot_maps.png'
+            icon: smicon
           },
           skg: {
             name: 'StasiunKompresorGas',
-            icon: iconBase + 'library_maps.png'
+            icon: skgicon
           },
           lbcv: {
             name: 'LBCV',
-            icon: iconBase + 'info-i_maps.png'
+            icon: lbcvicon
           }
 		}
+		var skgpbr = new google.maps.Marker({
+          position: {lat: 4.017443, lng: 98.273883},
+          map: map,
+          title: 'SKG Pangkalan Brandan',
+		  icon: skgicon
+        });
+		skgpbr.addListener('click', function() {
+          infowindow.open(map, skgpbr);
+        });
+//		var contentString = 'Lokasi Anda ditemukan.</br> Latitude = ' + 'position.coords.latitude' + '</br>Longitude = ' + 'position.coords.longitude';
+//        var infowindow = new google.maps.InfoWindow('Lokasi Anda ditemukan.</br><img src="https://durenmedan.webs.com/so.png"/> Latitude = ' + position.coords.latitude + '</br>Longitude = ' + position.coords.longitude);
+//		marker.addListener('click', function() {
+ //         infowindow.open(map, marker);
+//        });
 		var features = [
           {
             position: new google.maps.LatLng(5.221634, 97.077584), //SM Arun
-            type: 'sm'
+            type: 'sm',
+			description: 'coba'
           }, {
             position: new google.maps.LatLng(5.09859, 97.138503), //LBCV 1
-			type: 'lbcv'
+			type: 'lbcv',
+			description: 'coba'
           }, {
 		    position: new google.maps.LatLng(5.0511286, 97.2553603), //LBCV 2
-			type: 'lbcv'
+			type: 'lbcv',
+			description: 'coba'
           }, {
 			position: new google.maps.LatLng(4.9491693, 97.3376748), //LBCV 3
-			type: 'lbcv'
+			type: 'lbcv',
+			description: 'coba'
           }, {
             position: new google.maps.LatLng(4.8682137, 97.4479687), //LBCV 4
 			type: 'lbcv'
@@ -147,30 +167,48 @@
 			type: 'lbcv'
           }, {	
             position: new google.maps.LatLng(4.763970, 97.795643), //SKG RPA
-			type: 'lbcv'
+			type: 'skg'
           }, {		  
             position: new google.maps.LatLng(4.665926, 97.837022), //LBCV 8
             type: 'lbcv'
           }, {
-            position: new google.maps.LatLng(4.033090, 98.208174), //LBCV 15
+            position: new google.maps.LatLng(4.578443, 97.889069), //LBCV 9
             type: 'lbcv'
           }, {
-            position: new google.maps.LatLng(4,017443, 98.273883), //SKG PBR
+            position: new google.maps.LatLng(4.4583309, 97.9258811), //LBCV 10
+            type: 'lbcv'
+          }, {
+            position: new google.maps.LatLng(4.37855, 98.024541), //LBCV 11
+            type: 'lbcv'
+          }, {
+            position: new google.maps.LatLng(4.29723, 98.08454), //LBCV 12
+            type: 'lbcv'
+          }, {
+            position: new google.maps.LatLng(4.181811, 98.043201), //LBCV 13
+            type: 'lbcv'
+          }, {
+            position: new google.maps.LatLng(4.06212, 98.1121), //LBCV 14
+            type: 'lbcv'
+          }, {
+            position: new google.maps.LatLng(4.03305, 98.2082), //LBCV 15
+            type: 'lbcv'
+          }, {
+            position: new google.maps.LatLng(4.017443, 98.275883), //SKG PBR
             type: 'skg'
-          }, {
+		  }, {		  
             position: new google.maps.LatLng(3.773384, 98.671206), //SM Belawan
-            type: 'lbcv'
+            type: 'sm'
           } 
         ];
 		 // Create markers.
         features.forEach(function(feature) {
-          var marker = new google.maps.Marker({
+          var markercoba = new google.maps.Marker({
             position: feature.position,
             icon: icons[feature.type].icon,
             map: map
           });
         });
-      
+ 
 		var input = document.getElementById('pac-input');
 
         var autocomplete = new google.maps.places.Autocomplete(input);
@@ -194,7 +232,6 @@
         });
         marker1.addListener('click', toggleBounce);
 		
-
         var marker = new google.maps.Marker({map: map});
 
         marker.addListener('click', function() {
@@ -236,10 +273,9 @@
           data: getPoints(),
           map: map
         });
-		map.setTilt(45)
 		//external KML url
 		var ctaLayer = new google.maps.KmlLayer({
-          url: 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/cta5.kml',
+          url: 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/ctaq.kml',
           map: map
         });
       }
@@ -285,7 +321,6 @@
 
       function toggleHeatmap() {
         heatmap.setMap(heatmap.getMap() ? null : map);
-		map.setTilt(45)
       }
 
       function changeGradient() {
@@ -306,20 +341,17 @@
           'rgba(255, 0, 0, 1)'
         ]
         heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
-		map.setTilt(45)
       }
 
       function changeRadius() {
         heatmap.set('radius', heatmap.get('radius') ? null : 20);
-		map.setTilt(45)
       }
 
       function changeOpacity() {
         heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
-		map.setTilt(45)
       }
 
-      // Heatmap data: 500 Points
+      // Heatmap data
       function getPoints() {
         return [
           new google.maps.LatLng(3.782551, 98.445368),
@@ -338,7 +370,6 @@
           new google.maps.LatLng(3.752986, 98.403112),
           new google.maps.LatLng(3.751266, 98.403355)
         ];
-		map.setTilt(45)
       }
     </script>
     <script async defer
