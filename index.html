@@ -2,109 +2,193 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Duren Medan</title>
+    <title>Online Monitoring Duren Medan</title>
     <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
       #map {
-        height: 100%;
+        height: 100%; //100% tinggi
       }
-      /* Optional: Makes the sample page fill the window. */
       html, body {
-        height: 100%;
+        height: 100%; 
         margin: 0;
-        padding: 0;
+        padding: 0; //100% tinggi, tanpa margin, tanpa geser padding
       }
       #floating-panel {
         background-color: #fff;
         border: 1px solid #999;
         right: 0%;
-        padding: 5px;
+        padding: 0px;
         position: absolute;
-        top: 25%;
-        z-index: 5;
+        top: 5%;
+        z-index: 1;
       }
-	  .controls {
+      #show-panel {
         background-color: #fff;
-        border-radius: 2px;
-        border: 1px solid transparent;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        box-sizing: border-box;
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-        height: 29px;
-        margin-left: 17px;
-        margin-top: 10px;
-        outline: none;
-        padding: 0 11px 0 13px;
-        text-overflow: ellipsis;
-        width: 400px;
+        border: 1px solid #999;
+        right: 0%;
+        padding: 0px;
+        position: absolute;
+        top: 0%;
+        z-index: 1;
+		visibility: hidden;
       }
-
-      .controls:focus {
-        border-color: #4d90fe;
+      #hide-panel {
+        background-color: #fff;
+        border: 1px solid #999;
+        right: 0%;
+        padding: 0px;
+        position: absolute;
+        top: 0%;
+        z-index: 1;
       }
-      .title {
-        font-weight: bold;
-      }
-      #infowindow-content {
-        display: none;
-      }
-      #map #infowindow-content {
-        display: inline;
-      }
-	  #legend {
-        font-family: Arial, sans-serif;
-        background: #fff;
-        padding: 10px;
-        margin: 10px;
-        border: 3px solid #000;
-      }
-      #legend h3 {
-        margin-top: 0;
-      }
-      #legend img {
-        vertical-align: middle;
-      }
+	    table {border-collapse:collapse; width:10px;}
+		table td {border:solid 1px #fab; width:10px; word-wrap:break-word;}
     </style>
   </head>
 
-  <body>
-    <div id="floating-panel">
-	  <button onclick="geoLocation()">Lokasi Saya</button></br>
-      <button onclick="toggleHeatmap()">Toggle Heatmap</button></br>
-      <button onclick="changeGradient()">Change gradient</button></br>
-      <button onclick="changeRadius()">Change radius</button></br>
-      <button onclick="changeOpacity()">Change opacity</button></br>
-	  P = SKG
-	  A = SM
-	  L = LBCV
-	    <div id="style-selector-control" class="map-control">
-      <input type="radio" name="show-hide" id="hide-poi"
-          class="selector-control">
-      <label for="hide-poi">Hide</label>
-      <input type="radio" name="show-hide" id="show-poi"
-          class="selector-control" checked="checked">
-      <label for="show-poi">Show</label>
+  <body onload="startTime()">
+	<div id="hide-panel">
+	<button id="tombol" onclick="toggleFloatingPanel()">Sembunyikan Panel Kendali</button></br>
+	</div>
+	<div id="show-panel">
+	<button id="tombol" onclick="toggleFloatingPanel()">Munculkan Panel Kendali</button></br>
+	</div>
+    <div id="floating-panel"> 
+	  <b>Panel Kendali</b></br>
+	  	<button onclick="initMap()">Tampilan Awal</button></br>
+	  	Pilih Lokasi 
+		<select name="pilihlokasi" onChange="suhugas.value=myFunction(this.value)","tekanan.value=this.value">
+			<option value="smarun">SM Arun</option>
+			<option value="lbcv1">LBCV 1</option>
+			<option value="lbcv2">LBCV 2</option>
+			<option value="lbcv3">LBCV 3</option>
+			<option value="lbcv4">LBCV 4</option>
+			<option value="lbcv5">LBCV 5</option>
+			<option value="lbcv6">LBCV 6</option>
+			<option value="lbcv7">LBCV 7</option>
+			<option value="skgrpa">SKG Rantau Panjang</option>
+			<option value="lbcv8">LBCV 8</option>
+			<option value="lbcv9">LBCV 9</option>
+			<option value="lbcv10">LBCV 10</option>
+			<option value="lbcv11">LBCV 11</option>
+			<option value="lbcv12">LBCV 12</option>
+			<option value="lbcv13">LBCV 13</option>
+			<option value="lbcv14">LBCV 14</option>
+			<option value="lbcv15">LBCV 15</option>
+			<option value="skgpbr">SKG Pangkalan Brandan</option>
+			<option value="lbcv16">LBCV 16</option>
+			<option value="lbcv17">LBCV 17</option>
+			<option value="lbcv18">LBCV 18</option>
+			<option value="lbcv19">LBCV 19</option>
+			<option value="smblw">SM Belawan</option>
+			<option value="lainnya">Manual Input Koordinat</option>
+			<option value="lainnya">Manual Pencarian</option>
+		</select></br>
+	  <div id="waktu"></div></br>
+	  <b><font size="2">Posisi Kejadian Kebakaran</font></b></br>
+	  <font size="2"><div id="posisi"></div></font>
+	  <iframe name="openweather" src="http://api.openweathermap.org/data/2.5/weather?lat=4.017443&lon=98.275883&appid=e68dd68fe7a5d895fe5668c7a7939a45&units=metric&mode=html" width="160"></iframe>
+	  </br>
+	  <b>Data Penyaluran</b></br>
+	  Tekanan : <input type="text" id="tekanan" value="354" size="1"> psig</br>
+	  Suhu Gas : <input type="text" id="suhugas" value="80" size="1"> °F</br>
+	  Flowrate : <input type="text" id="flowrate" value="150" size="1"> MMSCFD</br></br>
+	  <button onclick="simulasi()">Simulasikan</button></br>
+	   Zona Bahaya: </br>
+		<font size="2"><table style="width:100%">
+		<tr>
+			<th>Zona</th>
+			<th>Merah</th>
+			<th>Oranye</th>
+			<th>Kuning</th>
+		</tr>
+		<tr>
+			<td>Radius (meter)</td>
+			<td>152</td>
+			<td>216</td>
+			<td>336</td>
+		</tr>
+		<tr>
+			<td>Daya ledak (kW/m2)</td>
+			<td>10</td>
+			<td>5</td>
+			<td>2</td>
+		</tr>
+				<tr width="1">
+			<td>Dampak</td>
+			<td>Berpotensi korban jiwa dalam 60 detik</td>
+			<td>Luka bakar parah dalam 60 detik</td>
+			<td>Luka bakar dalam 60 detik</td>
+		</tr>
+		</table></font>
     </div>
-    </div>
-    <div style="display: none">
-        <input id="pac-input"
-               class="controls"
-               type="text"
-               placeholder="Enter a location">
-    </div>
+
     <div id="map"></div>
     <script>
-      var map, heatmap, infoWindow;
-
-      function initMap() {
+		function myFunction(opsi) {
+		var text;
+		switch(opsi) {
+			case "smarun":
+			text = "Excellent choice. Martini is good for your soul.";
+			break;
+			case "Daiquiri":
+			text = "Daiquiri is my favorite too!";
+			break;
+			case "Cosmopolitan":
+			text = "Really? Are you sure the Cosmopolitan is your favorite?";
+			break;
+			default:
+			text = "I have never heard of that one..";
+		}
+		suhugas.value = text;
+		}
+	//tarik data openweather API
+    var zonamerah, zonaoranye, zonakuning;
+	//fungsiwaktu
+       function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 13,
-          center: {lat: 4.017443, lng: 98.273883}, //lokasi
-          mapTypeId: 'hybrid'  
+          zoom: 10,
+          center: {lat: 4.017443, lng: 98.275883}, //lokasi awal
+          mapTypeId: 'hybrid',  
+		  mapTypeControl: true,
+          mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+            mapTypeIds: ['roadmap', 'terrain', 'satellite', 'hybrid']}
         });
+	//lingkaran potensi dampak
+		var lingkaranmerah = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.8,
+            map: map, 
+            center: {lat: 4.017443, lng: 98.275883},
+            radius: 0
+          });
+		var lingkaranoranye = new google.maps.Circle({
+            strokeColor: '#FF9900',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF9900',
+            fillOpacity: 0.4,
+            map: map,
+            center: {lat: 4.017443, lng: 98.275883},
+            radius: 0
+          });
+		var lingkarankuning = new google.maps.Circle({
+            strokeColor: '#FFFF00',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FFFF00',
+            fillOpacity: 0.2,
+            map: map,
+            center: {lat: 4.017443, lng: 98.275883},
+            radius: 0
+          });
+		  zonamerah = lingkaranmerah;
+		  zonaoranye = lingkaranoranye;
+		  zonakuning = lingkarankuning;
+
 		var lbcvicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/lbcvicon.png';
 		var smicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/smicon.png';
 		var skgicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/skgicon.png';
@@ -122,187 +206,137 @@
             icon: lbcvicon
           }
 		}
-		var skgpbr = new google.maps.Marker({
-          position: {lat: 4.017443, lng: 98.273883},
-          map: map,
-          title: 'SKG Pangkalan Brandan',
-		  icon: skgicon
-        });
-		skgpbr.addListener('click', function() {
-          infowindow.open(map, skgpbr);
-        });
-//		var contentString = 'Lokasi Anda ditemukan.</br> Latitude = ' + 'position.coords.latitude' + '</br>Longitude = ' + 'position.coords.longitude';
-//        var infowindow = new google.maps.InfoWindow('Lokasi Anda ditemukan.</br><img src="https://durenmedan.webs.com/so.png"/> Latitude = ' + position.coords.latitude + '</br>Longitude = ' + position.coords.longitude);
-//		marker.addListener('click', function() {
- //         infowindow.open(map, marker);
-//        });
 		var features = [
           {
             position: new google.maps.LatLng(5.221634, 97.077584), //SM Arun
             type: 'sm',
-			description: 'coba'
+			title: 'SM Arun'
           }, {
             position: new google.maps.LatLng(5.09859, 97.138503), //LBCV 1
 			type: 'lbcv',
-			description: 'coba'
+			title: 'LBCV 1'
           }, {
 		    position: new google.maps.LatLng(5.0511286, 97.2553603), //LBCV 2
 			type: 'lbcv',
-			description: 'coba'
+			title: 'LBCV 2'
           }, {
 			position: new google.maps.LatLng(4.9491693, 97.3376748), //LBCV 3
 			type: 'lbcv',
-			description: 'coba'
+			title: 'LBCV 3'
           }, {
             position: new google.maps.LatLng(4.8682137, 97.4479687), //LBCV 4
-			type: 'lbcv'
+			type: 'lbcv',
+			title: 'LBCV 4'
           }, {
             position: new google.maps.LatLng(4.899277, 97.554188), //LBCV 5
-			type: 'lbcv'
+			type: 'lbcv',
+			title: 'LBCV 5'
           }, {
             position: new google.maps.LatLng(4.8323902, 97.6078731), //LBCV 6
-			type: 'lbcv'
+			type: 'lbcv',
+			title: 'LBCV 6'
           }, {
             position: new google.maps.LatLng(4.835706, 97.708989), //LBCV 7
-			type: 'lbcv'
+			type: 'lbcv',
+			title: 'LBCV 7'
           }, {	
             position: new google.maps.LatLng(4.763970, 97.795643), //SKG RPA
-			type: 'skg'
+			type: 'skg',
+			title: 'SKG Rantau Panjang'
           }, {		  
             position: new google.maps.LatLng(4.665926, 97.837022), //LBCV 8
-            type: 'lbcv'
+            type: 'lbcv',
+			title: 'LBCV 8'
           }, {
             position: new google.maps.LatLng(4.578443, 97.889069), //LBCV 9
-            type: 'lbcv'
+            type: 'lbcv',
+			title: 'LBCV 9'
           }, {
             position: new google.maps.LatLng(4.4583309, 97.9258811), //LBCV 10
-            type: 'lbcv'
+            type: 'lbcv',
+			title: 'LBCV 10'
           }, {
             position: new google.maps.LatLng(4.37855, 98.024541), //LBCV 11
-            type: 'lbcv'
+            type: 'lbcv',
+			title: 'LBCV 11'
           }, {
             position: new google.maps.LatLng(4.29723, 98.08454), //LBCV 12
-            type: 'lbcv'
+            type: 'lbcv',
+			title: 'LBCV 12'
           }, {
             position: new google.maps.LatLng(4.181811, 98.043201), //LBCV 13
-            type: 'lbcv'
+            type: 'lbcv',
+			title: 'LBCV 13'
           }, {
             position: new google.maps.LatLng(4.06212, 98.1121), //LBCV 14
-            type: 'lbcv'
+            type: 'lbcv',
+			title: 'LBCV 14'
           }, {
             position: new google.maps.LatLng(4.03305, 98.2082), //LBCV 15
-            type: 'lbcv'
+            type: 'lbcv',
+			title: 'LBCV 15'
           }, {
-            position: new google.maps.LatLng(4.017443, 98.275883), //SKG PBR
-            type: 'skg'
+            position: new google.maps.LatLng(4.017443, 98.275883), //SKG PBR 
+            type: 'skg',
+			title: 'SKG Pangkalan Brandan'
 		  }, {		  
             position: new google.maps.LatLng(3.773384, 98.671206), //SM Belawan
-            type: 'sm'
+            type: 'sm',
+			title: 'SM Belawan'
           } 
         ];
-		 // Create markers.
+		//membuat penanda
         features.forEach(function(feature) {
           var markercoba = new google.maps.Marker({
             position: feature.position,
             icon: icons[feature.type].icon,
-            map: map
+            map: map,
+			title: feature.title
           });
         });
- 
-		var input = document.getElementById('pac-input');
-
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.bindTo('bounds', map);
-		
-        // Specify just the place data fields that you need.
-        autocomplete.setFields(['place_id', 'geometry', 'name']);
-
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-        var infowindow = new google.maps.InfoWindow();
-        var infowindowContent = document.getElementById('infowindow-content');
-        infowindow.setContent(infowindowContent);
 
         marker1 = new google.maps.Marker({
           map: map,
           draggable: true,
           animation: google.maps.Animation.DROP,
-          position: {lat: 5.221498 , lng: 97.077649}
+          position: {lat: 4.017443 , lng: 98.275883}
 		 // label: labels
         });
         marker1.addListener('click', toggleBounce);
-		
-        var marker = new google.maps.Marker({map: map});
 
-        marker.addListener('click', function() {
-          infowindow.open(map, marker);
-        });
-
-        autocomplete.addListener('place_changed', function() {
-          infowindow.close();
-
-          var place = autocomplete.getPlace();
-
-          if (!place.geometry) {
-            return;
-          }
-
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);
-          }
-
-          // Set the position of the marker using the place ID and location.
-          marker.setPlace({
-            placeId: place.place_id,
-            location: place.geometry.location
-          });
-
-          marker.setVisible(true);
-
-          infowindowContent.children['place-name'].textContent = place.name;
-          infowindowContent.children['place-id'].textContent = place.place_id;
-          infowindowContent.children['place-address'].textContent =
-              place.formatted_address;
-          infowindow.open(map, marker);
-        });
-		//heatmap layer
-        heatmap = new google.maps.visualization.HeatmapLayer({
-          data: getPoints(),
-          map: map
-        });
 		//external KML url
 		var ctaLayer = new google.maps.KmlLayer({
           url: 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/ctaq.kml',
           map: map
         });
       }
-	function geoLocation() {
-		infoWindow = new google.maps.InfoWindow;
-		
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Lokasi Anda ditemukan.</br><img src="https://durenmedan.webs.com/so.png"/> Latitude = ' + position.coords.latitude + '</br>Longitude = ' + position.coords.longitude);
-            infoWindow.open(map);
-            map.setCenter(pos);
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        } else {
-          // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
-	}
-
+		function startTime() {
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth()+1;
+			var yy = today.getFullYear();
+			var h = today.getHours();
+			var m = today.getMinutes();
+			var s = today.getSeconds();
+			dd = checkTime(dd);
+			mm = checkTime(mm);
+			h = checkTime(h);
+			m = checkTime(m);
+			s = checkTime(s);
+			document.getElementById('waktu').innerHTML = "Tanggal "+dd+"-"+mm+"-"+yy+"</br>"+
+			h + ":" + m + ":" + s + " WIB";
+			document.getElementById('posisi').innerHTML = marker1.position;//marker1.getPosition().lat();
+			var ifr = document.getElementsByName('openweather')[0];
+			lat = marker1.getPosition().lat();
+			lng = marker1.getPosition().lng();
+			ifr.src = 'http://api.openweathermap.org/data/2.5/weather?lat='+lat+'&lon='+lng+'&appid=e68dd68fe7a5d895fe5668c7a7939a45&units=metric&mode=html';
+			var t = setTimeout(startTime, 500);
+		}
+		function checkTime(i) {
+		if (i < 10) {i = "0" + i};  // menambah digit 0 untuk satuan
+		return i;
+		}
       function toggleBounce() {
         if (marker1.getAnimation() !== null) {
           marker1.setAnimation(null);
@@ -310,17 +344,19 @@
           marker1.setAnimation(google.maps.Animation.BOUNCE);
         }
       }
-	  
-      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
-        infoWindow.open(map);
-      }
 
-      function toggleHeatmap() {
-        heatmap.setMap(heatmap.getMap() ? null : map);
+	  //tampilan panel kendali
+	  function toggleFloatingPanel() {
+        if(document.getElementById("floating-panel").style.visibility !== "hidden"){
+			document.getElementById("floating-panel").style.visibility = "hidden";
+			document.getElementById("hide-panel").style.visibility = "hidden";
+			document.getElementById("show-panel").style.visibility = "visible";
+			
+		} else {
+			document.getElementById("floating-panel").style.visibility = "visible";
+			document.getElementById("hide-panel").style.visibility = "visible";
+			document.getElementById("show-panel").style.visibility = "hidden";
+		}
       }
 
       function changeGradient() {
@@ -343,12 +379,13 @@
         heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
       }
 
-      function changeRadius() {
-        heatmap.set('radius', heatmap.get('radius') ? null : 20);
-      }
-
-      function changeOpacity() {
-        heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+      function simulasi() {
+		zonakuning.set('radius', 336);
+		zonakuning.set('center', marker1.position);
+		zonaoranye.set('radius', 216);
+		zonaoranye.set('center', marker1.position);
+		zonamerah.set('radius', 152);
+		zonamerah.set('center', marker1.position);
       }
 
       // Heatmap data
