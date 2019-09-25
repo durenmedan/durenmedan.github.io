@@ -56,7 +56,7 @@
 	  <b>Panel Kendali</b></br>
 	  	<button onclick="initMap()">Tampilan Awal</button></br>
 	  	Pilih Lokasi 
-		<select name="pilihlokasi" onChange="suhugas.value=myFunction(this.value)","tekanan.value=this.value">
+		<select name="pilihlokasi" onChange="sesuaikan(this.value)">
 			<option value="smarun">SM Arun</option>
 			<option value="lbcv1">LBCV 1</option>
 			<option value="lbcv2">LBCV 2</option>
@@ -85,12 +85,13 @@
 		</select></br>
 	  <div id="waktu"></div></br>
 	  <b><font size="2">Posisi Kejadian Kebakaran</font></b></br>
-	  <font size="2"><div id="posisi"></div></font>
+	  <font size="2"><input type="text" id="lintang" value="4.017443" size="1"> Lintang Utara</font></br>
+	  <font size="2"><input type="text" id="bujur" value="98.275883" size="1"> Bujur Barat</font></br>
 	  <iframe name="openweather" src="https://api.openweathermap.org/data/2.5/weather?lat=4.017443&lon=98.275883&appid=e68dd68fe7a5d895fe5668c7a7939a45&units=metric&mode=html" width="160"></iframe>
 	  </br>
 	  <b>Data Penyaluran</b></br>
 	  Tekanan : <input type="text" id="tekanan" value="354" size="1"> psig</br>
-	  Suhu Gas : <input type="text" id="suhugas" value="80" size="1"> °F</br>
+	  Suhu Gas : <input type="text" id="suhugas" value="9" size="1"> °F</br>
 	  Flowrate : <input type="text" id="flowrate" value="150" size="1"> MMSCFD</br></br>
 	  <button onclick="simulasi()">Simulasikan</button></br>
 	   Zona Bahaya: </br>
@@ -124,23 +125,253 @@
 
     <div id="map"></div>
     <script>
-		function myFunction(opsi) {
-		var text;
+	//senarai konstanta parameter
+	var flowratearun = 120;
+	var flowratemedco = 50;
+	var tekananarun = 620;
+	var tekananrpa = 540;
+	var tekananpbr = 450;
+	//pengaturan icon simbol
+	var lbcvicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/lbcvicon.png';
+	var smicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/smicon.png';
+	var skgicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/skgicon.png';
+	//konstanta lokasi
+	var senarailokasi = [
+          {
+            position: {lat:5.221634, lng:97.077584}, //SM Arun, no urut 0
+            type: 'sm',
+			title: 'SM Arun',
+			icon: smicon,
+			tekanan: tekananarun,
+			suhugas: 75,
+			flowrate: flowratearun
+          }, {
+            position: {lat:5.09859, lng:97.138503}, //LBCV 1, no urut 1
+			type: 'lbcv',
+			title: 'LBCV 1 - KP015',
+			icon: lbcvicon,
+			tekanan: tekananarun-10,
+			suhugas: 75,
+			flowrate: flowratearun
+          }, {
+		    position: {lat:5.0511286, lng:97.2553603}, //LBCV 2, no urut 2
+			type: 'lbcv',
+			title: 'LBCV 2 - KP032',
+			icon: lbcvicon,
+			tekanan: tekananarun-20,
+			suhugas: 75,
+			flowrate: flowratearun
+          }, {
+			position: {lat:4.9491693, lng:97.3376748}, //LBCV 3, no urut 3
+			type: 'lbcv',
+			title: 'LBCV 3 - KP048',
+			icon: lbcvicon,
+			tekanan: tekananarun-30,
+			suhugas: 75,
+			flowrate: flowratearun
+          }, {
+            position: {lat:4.8682137, lng:97.4479687}, //LBCV 4, no urut 4
+			type: 'lbcv',
+			title: 'LBCV 4 - KP064',
+			icon: lbcvicon,
+			tekanan: tekananarun-40,
+			suhugas: 75,
+			flowrate: flowratearun
+          }, {
+            position: {lat:4.899277, lng:97.554188}, //LBCV 5, no urut 5
+			type: 'lbcv',
+			title: 'LBCV 5 - KP081',
+			icon: lbcvicon,
+			tekanan: tekananarun-50,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.8323902, lng:97.6078731}, //LBCV 6, no urut 6
+			type: 'lbcv',
+			title: 'LBCV 6 - KP097',
+			icon: lbcvicon,
+			tekanan: tekananarun-60,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.835706, lng:97.708989}, //LBCV 7, no urut 7
+			type: 'lbcv',
+			title: 'LBCV 7 - KP113',
+			icon: lbcvicon,
+			tekanan: tekananarun-70,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {	
+            position: {lat:4.763970, lng:97.795643}, //SKG RPA, no urut 8
+			type: 'skg',
+			title: 'SKG Rantau Panjang - KP128',
+			icon: skgicon,
+			tekanan: tekananrpa,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {		  
+            position: {lat:4.665926, lng:97.837022}, //LBCV 8, no urut 9
+            type: 'lbcv',
+			title: 'LBCV 8 - KP144',
+			icon: lbcvicon,
+			tekanan: tekananrpa-10,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.578443, lng:97.889069}, //LBCV 9, no urut 10
+            type: 'lbcv',
+			title: 'LBCV 9 - KP157',
+			icon: lbcvicon,
+			tekanan: tekananrpa-20,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.4583309, lng:97.9258811}, //LBCV 10, no urut 11
+            type: 'lbcv',
+			title: 'LBCV 10 - KP174',
+			icon: lbcvicon,
+			tekanan: tekananrpa-30,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.37855, lng:98.024541}, //LBCV 11, no urut 12
+            type: 'lbcv',
+			title: 'LBCV 11 - KP192',
+			icon: lbcvicon,
+			tekanan: tekananrpa-40,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.29723, lng:98.08454}, //LBCV 12, no urut 13
+            type: 'lbcv',
+			title: 'LBCV 12 - KP208',
+			icon: lbcvicon,
+			tekanan: tekananrpa-50,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.181811, lng:98.043201}, //LBCV 13, no urut 14
+            type: 'lbcv',
+			title: 'LBCV 13 - KP224',
+			icon: lbcvicon,
+			tekanan: tekananrpa-60,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.06212, lng:98.1121}, //LBCV 14, no urut 15
+            type: 'lbcv',
+			title: 'LBCV 14 - KP240',
+			icon: lbcvicon,
+			tekanan: tekananrpa-70,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.03305, lng:98.2082}, //LBCV 15, no urut 16
+            type: 'lbcv',
+			title: 'LBCV 15 - KP255',
+			icon: lbcvicon,
+			tekanan: tekananrpa-80,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }, {
+            position: {lat:4.017443, lng:98.275883}, //SKG PBR, no urut 17
+            type: 'skg',
+			title: 'SKG Pangkalan Brandan - KP266',
+			icon: skgicon,
+			tekanan: tekananpbr,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+		  }, {
+            position: {lat:3.8941479, lng:98.3220255}, //LBCV 16, no urut 18
+            type: 'lbcv',
+			title: 'LBCV 16 - KP282',
+			icon: lbcvicon,
+			tekanan: tekananpbr-10,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          },{
+            position: {lat:3.778708, lng:98.415492}, //LBCV 17, no urut 19
+            type: 'lbcv',
+			title: 'LBCV 17 - KP299',
+			icon: lbcvicon,
+			tekanan: tekananpbr-20,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          },{
+            position: {lat:3.7435247, lng:98.4966937}, //LBCV 18, no urut 20
+            type: 'lbcv',
+			title: 'LBCV 18 - KP314',
+			icon: lbcvicon,
+			tekanan: tekananpbr-30,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          },{
+            position: {lat:3.743714, lng:98.538554}, //LBCV 19, no urut 21
+            type: 'lbcv',
+			title: 'LBCV 19 - KP319',
+			icon: lbcvicon,
+			tekanan: tekananpbr-40,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          },{		  
+            position: {lat:3.773384, lng:98.671206}, //SM Belawan, no urut 22
+            type: 'sm',
+			title: 'SM Belawan - KP334',
+			icon: smicon,
+			tekanan: tekananpbr-50,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          } 
+        ];
+
+	function sesuaikan(pilihan) {
+	tekanan.value=detillokasi(nomorlokasi(pilihan))[0];
+	suhugas.value=detillokasi(nomorlokasi(pilihan))[1];
+	flowrate.value=detillokasi(nomorlokasi(pilihan))[2];
+	lintang.value=detillokasi(nomorlokasi(pilihan))[3];
+	bujur.value=detillokasi(nomorlokasi(pilihan))[4];
+	}
+	
+		function nomorlokasi(opsi) {
 		switch(opsi) {
-			case "smarun":
-			text = "Excellent choice. Martini is good for your soul.";
-			break;
-			case "Daiquiri":
-			text = "Daiquiri is my favorite too!";
-			break;
-			case "Cosmopolitan":
-			text = "Really? Are you sure the Cosmopolitan is your favorite?";
-			break;
-			default:
-			text = "I have never heard of that one..";
+			case "smarun": return 0; break;
+			case "lbcv1": return 1; break;
+			case "lbcv2": return 2; break;
+			case "lbcv3": return 3; break;
+			case "lbcv4": return 4; break;
+			case "lbcv5": return 5; break;
+			case "lbcv6": return 6;	break;
+			case "lbcv7": return 7;	break;
+			case "skgrpa": return 8; break;
+			case "lbcv8": return 9; break;
+			case "lbcv9": return 10; break;
+			case "lbcv10": return 11; break;
+			case "lbcv11": return 12; break;
+			case "lbcv12": return 13; break;
+			case "lbcv13": return 14; break;
+			case "lbcv14": return 15; break;
+			case "lbcv15": return 16; break;
+			case "skgpbr": return 17; break;
+			case "lbcv16": return 18; break;
+			case "lbcv17": return 19; break;
+			case "lbcv18": return 20; break;
+			case "lbcv19": return 21; break;
+			case "smblw": return 22; break;
+			default: return 17;
 		}
-		suhugas.value = text;
 		}
+		function detillokasi(nourut){	
+		var tekanan,suhugas,flowrate,lintang,bujur;
+			tekanan=senarailokasi[nourut].tekanan;
+			suhugas=senarailokasi[nourut].suhugas;
+			flowrate=senarailokasi[nourut].flowrate;
+			lintang=senarailokasi[nourut].position.lat;
+			bujur=senarailokasi[nourut].position.lng;
+		mn = new google.maps.LatLng(lintang,bujur);
+		marker1.setPosition(mn);
+		return [tekanan,suhugas,flowrate,lintang,bujur];
+		}
+			
 	//tarik data openweather API
     var zonamerah, zonaoranye, zonakuning;
 	//fungsiwaktu
@@ -148,7 +379,7 @@
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 10,
           center: {lat: 4.017443, lng: 98.275883}, //lokasi awal
-          mapTypeId: 'hybrid',  
+          mapTypeId: 'hybrid',  //citra satelit disertai batas, nama tempat, dll
 		  mapTypeControl: true,
           mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
@@ -189,107 +420,13 @@
 		  zonaoranye = lingkaranoranye;
 		  zonakuning = lingkarankuning;
 
-		var lbcvicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/lbcvicon.png';
-		var smicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/smicon.png';
-		var skgicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/skgicon.png';
-        var icons = {
-          sm: {
-            name: 'StasiunMetering',
-            icon: smicon
-          },
-          skg: {
-            name: 'StasiunKompresorGas',
-            icon: skgicon
-          },
-          lbcv: {
-            name: 'LBCV',
-            icon: lbcvicon
-          }
-		}
-		var features = [
-          {
-            position: new google.maps.LatLng(5.221634, 97.077584), //SM Arun
-            type: 'sm',
-			title: 'SM Arun'
-          }, {
-            position: new google.maps.LatLng(5.09859, 97.138503), //LBCV 1
-			type: 'lbcv',
-			title: 'LBCV 1'
-          }, {
-		    position: new google.maps.LatLng(5.0511286, 97.2553603), //LBCV 2
-			type: 'lbcv',
-			title: 'LBCV 2'
-          }, {
-			position: new google.maps.LatLng(4.9491693, 97.3376748), //LBCV 3
-			type: 'lbcv',
-			title: 'LBCV 3'
-          }, {
-            position: new google.maps.LatLng(4.8682137, 97.4479687), //LBCV 4
-			type: 'lbcv',
-			title: 'LBCV 4'
-          }, {
-            position: new google.maps.LatLng(4.899277, 97.554188), //LBCV 5
-			type: 'lbcv',
-			title: 'LBCV 5'
-          }, {
-            position: new google.maps.LatLng(4.8323902, 97.6078731), //LBCV 6
-			type: 'lbcv',
-			title: 'LBCV 6'
-          }, {
-            position: new google.maps.LatLng(4.835706, 97.708989), //LBCV 7
-			type: 'lbcv',
-			title: 'LBCV 7'
-          }, {	
-            position: new google.maps.LatLng(4.763970, 97.795643), //SKG RPA
-			type: 'skg',
-			title: 'SKG Rantau Panjang'
-          }, {		  
-            position: new google.maps.LatLng(4.665926, 97.837022), //LBCV 8
-            type: 'lbcv',
-			title: 'LBCV 8'
-          }, {
-            position: new google.maps.LatLng(4.578443, 97.889069), //LBCV 9
-            type: 'lbcv',
-			title: 'LBCV 9'
-          }, {
-            position: new google.maps.LatLng(4.4583309, 97.9258811), //LBCV 10
-            type: 'lbcv',
-			title: 'LBCV 10'
-          }, {
-            position: new google.maps.LatLng(4.37855, 98.024541), //LBCV 11
-            type: 'lbcv',
-			title: 'LBCV 11'
-          }, {
-            position: new google.maps.LatLng(4.29723, 98.08454), //LBCV 12
-            type: 'lbcv',
-			title: 'LBCV 12'
-          }, {
-            position: new google.maps.LatLng(4.181811, 98.043201), //LBCV 13
-            type: 'lbcv',
-			title: 'LBCV 13'
-          }, {
-            position: new google.maps.LatLng(4.06212, 98.1121), //LBCV 14
-            type: 'lbcv',
-			title: 'LBCV 14'
-          }, {
-            position: new google.maps.LatLng(4.03305, 98.2082), //LBCV 15
-            type: 'lbcv',
-			title: 'LBCV 15'
-          }, {
-            position: new google.maps.LatLng(4.017443, 98.275883), //SKG PBR 
-            type: 'skg',
-			title: 'SKG Pangkalan Brandan'
-		  }, {		  
-            position: new google.maps.LatLng(3.773384, 98.671206), //SM Belawan
-            type: 'sm',
-			title: 'SM Belawan'
-          } 
-        ];
-		//membuat penanda
-        features.forEach(function(feature) {
+		
+
+		//membuat penanda senarai lokasi
+        senarailokasi.forEach(function(feature) {
           var markercoba = new google.maps.Marker({
             position: feature.position,
-            icon: icons[feature.type].icon,
+            icon: feature.icon,
             map: map,
 			title: feature.title
           });
@@ -297,7 +434,7 @@
 
         marker1 = new google.maps.Marker({
           map: map,
-          draggable: true,
+          draggable: false,
           animation: google.maps.Animation.DROP,
           position: {lat: 4.017443 , lng: 98.275883}
 		 // label: labels
@@ -326,10 +463,11 @@
 			s = checkTime(s);
 			document.getElementById('waktu').innerHTML = "Tanggal "+dd+"-"+mm+"-"+yy+"</br>"+
 			h + ":" + m + ":" + s + " WIB";
-			document.getElementById('posisi').innerHTML = marker1.position;//marker1.getPosition().lat();
 			var ifr = document.getElementsByName('openweather')[0];
 			lat = marker1.getPosition().lat();
 			lng = marker1.getPosition().lng();
+			//document.getElementById('lintang').value = lat;
+			//document.getElementById('bujur').value = lng;
 			ifr.src = 'https://api.openweathermap.org/data/2.5/weather?lat='+lat+'&lon='+lng+'&appid=e68dd68fe7a5d895fe5668c7a7939a45&units=metric&mode=html';
 			var t = setTimeout(startTime, 500);
 		}
@@ -359,26 +497,6 @@
 		}
       }
 
-      function changeGradient() {
-        var gradient = [
-          'rgba(0, 255, 255, 0)',
-          'rgba(0, 255, 255, 1)',
-          'rgba(0, 191, 255, 1)',
-          'rgba(0, 127, 255, 1)',
-          'rgba(0, 63, 255, 1)',
-          'rgba(0, 0, 255, 1)',
-          'rgba(0, 0, 223, 1)',
-          'rgba(0, 0, 191, 1)',
-          'rgba(0, 0, 159, 1)',
-          'rgba(0, 0, 127, 1)',
-          'rgba(63, 0, 91, 1)',
-          'rgba(127, 0, 63, 1)',
-          'rgba(191, 0, 31, 1)',
-          'rgba(255, 0, 0, 1)'
-        ]
-        heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
-      }
-
       function simulasi() {
 		zonakuning.set('radius', 336);
 		zonakuning.set('center', marker1.position);
@@ -386,27 +504,6 @@
 		zonaoranye.set('center', marker1.position);
 		zonamerah.set('radius', 152);
 		zonamerah.set('center', marker1.position);
-      }
-
-      // Heatmap data
-      function getPoints() {
-        return [
-          new google.maps.LatLng(3.782551, 98.445368),
-          new google.maps.LatLng(3.782745, 98.444586),
-          new google.maps.LatLng(3.782842, 98.443688),
-          new google.maps.LatLng(3.782919, 98.442815),
-          new google.maps.LatLng(3.782992, 98.442112),
-          new google.maps.LatLng(3.783100, 98.441461),
-          new google.maps.LatLng(3.783206, 98.440829),
-          new google.maps.LatLng(3.760851, 98.443118),
-          new google.maps.LatLng(3.757039, 98.404346),
-          new google.maps.LatLng(3.756335, 98.403719),
-          new google.maps.LatLng(3.755503, 98.403406),
-          new google.maps.LatLng(3.754665, 98.403242),
-          new google.maps.LatLng(3.753837, 98.403172),
-          new google.maps.LatLng(3.752986, 98.403112),
-          new google.maps.LatLng(3.751266, 98.403355)
-        ];
       }
     </script>
     <script async defer
