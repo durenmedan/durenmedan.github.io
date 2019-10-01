@@ -18,8 +18,18 @@
         right: 0%;
         padding: 0px;
         position: absolute;
-        top: 5%;
+        top: 45px;
         z-index: 1;
+      }
+	  #hasilsimulasi {
+        background-color: #fff;
+        border: 1px solid #999;
+        right: 0%;
+        padding: 0px;
+        position: absolute;
+        bottom: -43%;
+        z-index: 1;
+		visibility: hidden;
       }
       #show-panel {
         background-color: #fff;
@@ -30,6 +40,15 @@
         top: 0%;
         z-index: 1;
 		visibility: hidden;
+      }
+	  #tampilanawal {
+        background-color: #fff;
+        border: 1px solid #999;
+        right: 0%;
+        padding: 0px;
+        position: absolute;
+        top: 23px;
+        z-index: 1;
       }
       #hide-panel {
         background-color: #fff;
@@ -52,11 +71,13 @@
 	<div id="show-panel">
 	<button id="tombol" onclick="toggleFloatingPanel()">Munculkan Panel Kendali</button></br>
 	</div>
+	<div id="tampilanawal">
+	<button onclick="initMap()">Tampilan Awal</button>
+	</div>
     <div id="floating-panel"> 
 	  <b>Panel Kendali</b></br>
-	  	<div id="waktu"></div></br>
-	  	<button onclick="initMap()">Tampilan Awal</button></br>
-	  	Pilih Lokasi 
+	  	<div id="waktu"></div>
+	  	<font size="2">Pilih Lokasi 
 		<select name="pilihlokasi" onChange="sesuaikan(this.value)">
 			<option value="smarun">SM Arun</option>
 			<option value="lbcv1">LBCV 1</option>
@@ -82,7 +103,7 @@
 			<option value="lbcv19">LBCV 19</option>
 			<option value="smblw">SM Belawan</option>
 			<option value="manualinput">Manual Input Koordinat</option>
-			<option value="manualpencarian">Manual Pencarian</option>
+			<option value="manualpencarian">Manual Pencarian</option></font>
 		</select></br>
 	  <b><font size="2">Posisi Kejadian Kebakaran</font><div id="masukkan"></div></b>
 	  <font size="2"><input type="text" id="lintang" value="4.017443" size="1"> Lintang Utara, </font><font size="2"><input type="text" id="bujur" value="98.275883" size="1"> Bujur Barat</font></br></br>
@@ -94,13 +115,13 @@
 	  <font size="2">Suhu Udara <input type="text" id="suhuudara" value=" " size="1"> °C</font></br>
 	  <font size="2">Curah Hujan <input type="text" id="curahhujan" value=" " size="10"></font></br>
 	  </br> 
-	  <b>Data Penyaluran</b></br>
+	  <font size="2"><b>Data Penyaluran</b></br>
 	  Tekanan : <input type="text" id="tekanan" value="354" size="1"> psig</br>
 	  Suhu Gas : <input type="text" id="suhugas" value="9" size="1"> °F</br>
 	  Flowrate : <input type="text" id="flowrate" value="150" size="1"> MMSCFD</br></br>
-	  <button onclick="simulasi()">Simulasikan</button></br>
-	   Zona Bahaya: </br>
-		<font size="2"><table style="width:100%">
+	  <center><button onclick="simulasi()">Simulasikan</button></center></font>
+	  <div id="hasilsimulasi">
+		<font size="2"><table style="width:239px">
 		<tr>
 			<th>Zona</th>
 			<th>Merah</th>
@@ -125,7 +146,7 @@
 			<td>Luka bakar parah dalam 60 detik</td>
 			<td>Luka bakar dalam 60 detik</td>
 		</tr>
-		</table></font>
+		</table></font></div>
     </div>
 
     <div id="map"></div>
@@ -353,6 +374,7 @@
 	flowrate.value=detillokasi(nomorlokasi(pilihan))[2];
 	lintang.value=detillokasi(nomorlokasi(pilihan))[3];
 	bujur.value=detillokasi(nomorlokasi(pilihan))[4];
+	aqi();
 }
 	
 		function nomorlokasi(opsi) {
@@ -499,7 +521,7 @@
 			lng = marker1.getPosition().lng();
 			//document.getElementById('lintang').value = lat;
 			//document.getElementById('bujur').value = lng;
-			kondisilingkungan(); aqi();
+			kondisilingkungan();
 			var t = setTimeout(startTime, 1000);
 		}
 		function checkTime(i) {
@@ -518,6 +540,7 @@
 	  function toggleFloatingPanel() {
         if(document.getElementById("floating-panel").style.visibility !== "hidden"){
 			document.getElementById("floating-panel").style.visibility = "hidden";
+			document.getElementById("hasilsimulasi").style.visibility = "hidden";
 			document.getElementById("hide-panel").style.visibility = "hidden";
 			document.getElementById("show-panel").style.visibility = "visible";
 			
@@ -535,6 +558,9 @@
 		zonaoranye.set('center', marker1.position);
 		zonamerah.set('radius', 152);
 		zonamerah.set('center', marker1.position);
+		
+			document.getElementById("hasilsimulasi").style.visibility = "visible";
+		
       }
 function kondisilingkungan(){  
 var xmlhttp = new XMLHttpRequest();
