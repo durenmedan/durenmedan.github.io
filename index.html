@@ -548,7 +548,7 @@ xmlhttp.onreadystatechange = function() {
 	curahhujan.value = myObj.weather[0].description;
   }
 };
-var aa = "https://api.openweathermap.org/data/2.5/weather?lat="+lintang.value+"&lon="+bujur.value+"&appid=e68dd68fe7a5d895fe5668c7a7939a45&units=metric&mode=json";
+var aa = "http://api.openweathermap.org/data/2.5/weather?lat="+lintang.value+"&lon="+bujur.value+"&appid=e68dd68fe7a5d895fe5668c7a7939a45&units=metric&mode=json";
 xmlhttp.open('GET', aa, true);
 xmlhttp.send();
 }
@@ -562,7 +562,7 @@ xmlhttp.onreadystatechange = function() {
 	document.getElementById("namadaerah").innerHTML = myObj.city_name;
   }
 };
-var aa = "https://api.weatherbit.io/v2.0/current/airquality?lat="+lintang.value+"&lon="+bujur.value+"&key=839ac545e3a746b485ac3b2583e2ec32";
+var aa = "http://api.weatherbit.io/v2.0/current/airquality?lat="+lintang.value+"&lon="+bujur.value+"&key=839ac545e3a746b485ac3b2583e2ec32";
 xmlhttp.open('GET', aa, true);
 xmlhttp.send();
 }
