@@ -28,31 +28,28 @@
         padding: 0px;
         position: absolute;
         bottom: -43%;
-        z-index: 1;
 		visibility: hidden;
       }
-
 	  #tampilanawal {
         right: 0%;
         padding: 0px;
         position: absolute;
         top: 23px;
-        z-index: 1;
       }
       #show-panel {
-        right: -7%;
+        right: 0%;
         padding: 0px;
         position: absolute;
         top: 0%;
-        z-index: 1;
 		visibility: hidden;
+		z-index: 1;
       }
 	  #hide-panel {
-        right: -7%;
+        right: 0%;
         padding: 0px;
         position: absolute;
         top: 0%;
-        z-index: 1;
+		z-index: 1;
       }
 	    table {border-collapse:collapse; width:10px;}
 		table td {border:solid 1px #fab; width:10px; word-wrap:break-word;}
@@ -421,10 +418,23 @@
           zoom: 18,
           center: {lat: 4.017443, lng: 98.275883}, //lokasi awal SKG PBR
           mapTypeId: 'hybrid',  //citra satelit disertai batas, nama tempat, dll
+		  zoomControl: true,
+		  zoomControlOptions: {
+              position: google.maps.ControlPosition.TOP_LEFT
+          },		  
+          fullscreenControl: true,
+          fullscreenControlOptions: {
+              position: google.maps.ControlPosition.LEFT_TOP
+          },
 		  mapTypeControl: true,
           mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-            mapTypeIds: ['roadmap', 'terrain', 'satellite', 'hybrid']}
+            mapTypeIds: ['roadmap', 'terrain', 'satellite', 'hybrid']
+	      },
+		  streetViewControl: true,
+		  streetViewControlOptions: {
+              position: google.maps.ControlPosition.LEFT_TOP
+          }
         });
 	//lingkaran potensi dampak
 		var lingkaranmerah = new google.maps.Circle({
