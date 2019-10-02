@@ -113,7 +113,7 @@
 	  <font size="2">Arah Angin <input type="text" id="arahangin" value=" " size="4"> °</font></br>
 	  <font size="2">Kelembapan <input type="text" id="kelembapan" value=" " size="1"> %</font></br>
 	  <font size="2">Suhu Udara <input type="text" id="suhuudara" value=" " size="1"> °C</font></br>
-	  <font size="2">Curah Hujan <input type="text" id="curahhujan" value=" " size="10"></font></br>
+	  <font size="2">Cuaca <input type="text" id="cuaca" value=" " size="10"></font></br>
 	  </br> 
 	  <font size="2"><b>Data Penyaluran</b></br>
 	  Tekanan : <input type="text" id="tekanan" value="354" size="1"> psig</br>
@@ -135,7 +135,7 @@
 			<td>336</td>
 		</tr>
 		<tr>
-			<td>Daya ledak (kW/m2)</td>
+			<td>Daya ledak (kW/m²)</td>
 			<td>10</td>
 			<td>5</td>
 			<td>2</td>
@@ -424,6 +424,7 @@
     var zonamerah, zonaoranye, zonakuning;
 	//fungsiwaktu
        function initMap() {
+	   aqi();
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 18,
           center: {lat: 4.017443, lng: 98.275883}, //lokasi awal
@@ -432,6 +433,7 @@
           mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
             mapTypeIds: ['roadmap', 'terrain', 'satellite', 'hybrid']}
+		    
         });
 	//lingkaran potensi dampak
 		var lingkaranmerah = new google.maps.Circle({
@@ -509,7 +511,7 @@
 			var h = today.getHours();
 			var m = today.getMinutes();
 			var s = today.getSeconds();
-			dd = checkTime(dd);
+			//dd = checkTime(dd);
 			mm = checkTime(mm);
 			h = checkTime(h);
 			m = checkTime(m);
@@ -521,7 +523,7 @@
 			lng = marker1.getPosition().lng();
 			//document.getElementById('lintang').value = lat;
 			//document.getElementById('bujur').value = lng;
-			kondisilingkungan();
+			//kondisilingkungan();
 			var t = setTimeout(startTime, 1000);
 		}
 		function checkTime(i) {
@@ -558,26 +560,10 @@
 		zonaoranye.set('center', marker1.position);
 		zonamerah.set('radius', 152);
 		zonamerah.set('center', marker1.position);
-		
-			document.getElementById("hasilsimulasi").style.visibility = "visible";
+		document.getElementById("hasilsimulasi").style.visibility = "visible";
 		
       }
-function kondisilingkungan(){  
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.onreadystatechange = function() {
-  if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    var myObj = JSON.parse(xmlhttp.responseText);
-    kecepatanangin.value = myObj.wind.speed;
-	arahangin.value = myObj.wind.deg;
-	kelembapan.value = myObj.main.humidity;
-	suhuudara.value = myObj.main.temp;
-	curahhujan.value = myObj.weather[0].description;
-  }
-};
-var aa = "https://api.openweathermap.org/data/2.5/weather?lat="+lintang.value+"&lon="+bujur.value+"&appid=e68dd68fe7a5d895fe5668c7a7939a45&units=metric&mode=json";
-xmlhttp.open('GET', aa, true);
-xmlhttp.send();
-}
+
 
 function aqi(){  
 var xmlhttp = new XMLHttpRequest();
@@ -585,10 +571,15 @@ xmlhttp.onreadystatechange = function() {
   if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
     var myObj = JSON.parse(xmlhttp.responseText);
 	aqiindex.value = myObj.data[0].aqi;
-	document.getElementById("namadaerah").innerHTML = myObj.city_name;
+	document.getElementById("namadaerah").innerHTML = myObj.data[0].city_name;
+	kecepatanangin.value = myObj.data[0].wind_spd;
+	arahangin.value = myObj.data[0].wind_dir;
+	kelembapan.value = myObj.data[0].rh;
+	suhuudara.value = myObj.data[0].temp;
+	cuaca.value = myObj.data[0].weather.description;
   }
 };
-var aa = "https://api.weatherbit.io/v2.0/current/airquality?lat="+lintang.value+"&lon="+bujur.value+"&key=839ac545e3a746b485ac3b2583e2ec32";
+var aa = "https://api.weatherbit.io/v2.0/current?lat="+lintang.value+"&lon="+bujur.value+"&key=b57ca6ae2ee04e68ba19f3a6299a6a3e&lang=id";
 xmlhttp.open('GET', aa, true);
 xmlhttp.send();
 }
