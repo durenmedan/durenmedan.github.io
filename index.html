@@ -18,7 +18,7 @@
         right: 0%;
         padding: 0px;
         position: absolute;
-        top: 45px;
+        top: 50px;
         z-index: 1;
       }
 	  #hasilsimulasi {
@@ -31,29 +31,24 @@
         z-index: 1;
 		visibility: hidden;
       }
-      #show-panel {
-        background-color: #fff;
-        border: 1px solid #999;
-        right: 0%;
-        padding: 0px;
-        position: absolute;
-        top: 0%;
-        z-index: 1;
-		visibility: hidden;
-      }
+
 	  #tampilanawal {
-        background-color: #fff;
-        border: 1px solid #999;
         right: 0%;
         padding: 0px;
         position: absolute;
         top: 23px;
         z-index: 1;
       }
-      #hide-panel {
-        background-color: #fff;
-        border: 1px solid #999;
-        right: 0%;
+      #show-panel {
+        right: -7%;
+        padding: 0px;
+        position: absolute;
+        top: 0%;
+        z-index: 1;
+		visibility: hidden;
+      }
+	  #hide-panel {
+        right: -7%;
         padding: 0px;
         position: absolute;
         top: 0%;
@@ -66,13 +61,12 @@
 
   <body onload="waktu()">
 	<div id="hide-panel">
-	<button id="tombol" onclick="toggleFloatingPanel()">Sembunyikan Panel Kendali</button></br>
+	<img width=20% height=20% title="Sembunyikan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/sembunyikan.png onclick="toggleFloatingPanel()"/><img width=20% height=20% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br>
 	</div>
 	<div id="show-panel">
-	<button id="tombol" onclick="toggleFloatingPanel()">Munculkan Panel Kendali</button></br>
+		<img width=20% height=20% title="Tampilkan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilkan.png onclick="toggleFloatingPanel()"/><img width=20% height=20% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br></br>
 	</div>
 	<div id="tampilanawal">
-	<button onclick="initMap()">Tampilan Awal</button>
 	</div>
     <div id="floating-panel"> 
 	  <b>Panel Kendali</b></br>
@@ -104,9 +98,9 @@
 			<option value="smblw">SM Belawan</option>
 			<option value="manualinput">Manual Input Koordinat</option></font>
 		</select></br>
-	  <b><font size="2">Posisi Kejadian Kebakaran</font><div id="masukkan"></div></b>
+	  <b><font size="2">Posisi Kejadian Kebakaran</font><div id="masukkan"></b><div id="namadaerah"></div></div>
 	  <font size="2"><input type="text" id="lintang" value="4.017443" size="1"> Lintang Utara, </font><font size="2"><input type="text" id="bujur" value="98.275883" size="1"> Bujur Barat</font></br></br>
-	  <b><font size="2">Kondisi Lingkungan<div id="namadaerah"></div></font></b>
+	  <b><font size="2">Kondisi Lingkungan</font></b></br>
 	  <font size="2">Air Quality Index <input type="text" id="aqiindex" size="1"></input> US AQI</font></br>
 	  <font size="2">Kecepatan Angin <input type="text" id="kecepatanangin" value=" " size="4"> m/s</font></br>
 	  <font size="2">Arah Angin <input type="text" id="arahangin" value=" " size="1"> °</font></br>
