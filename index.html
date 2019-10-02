@@ -64,7 +64,7 @@
     </style>
   </head>
 
-  <body onload="startTime()">
+  <body onload="waktu()">
 	<div id="hide-panel">
 	<button id="tombol" onclick="toggleFloatingPanel()">Sembunyikan Panel Kendali</button></br>
 	</div>
@@ -78,7 +78,7 @@
 	  <b>Panel Kendali</b></br>
 	  	<div id="waktu"></div>
 	  	<font size="2">Pilih Lokasi 
-		<select name="pilihlokasi" onChange="sesuaikan(this.value)">
+		<select id="pilihlokasikejadian" name="pilihlokasi" onChange="sesuaikan(this.value)">
 			<option value="smarun">SM Arun</option>
 			<option value="lbcv1">LBCV 1</option>
 			<option value="lbcv2">LBCV 2</option>
@@ -102,15 +102,14 @@
 			<option value="lbcv18">LBCV 18</option>
 			<option value="lbcv19">LBCV 19</option>
 			<option value="smblw">SM Belawan</option>
-			<option value="manualinput">Manual Input Koordinat</option>
-			<option value="manualpencarian">Manual Pencarian</option></font>
+			<option value="manualinput">Manual Input Koordinat</option></font>
 		</select></br>
 	  <b><font size="2">Posisi Kejadian Kebakaran</font><div id="masukkan"></div></b>
 	  <font size="2"><input type="text" id="lintang" value="4.017443" size="1"> Lintang Utara, </font><font size="2"><input type="text" id="bujur" value="98.275883" size="1"> Bujur Barat</font></br></br>
 	  <b><font size="2">Kondisi Lingkungan<div id="namadaerah"></div></font></b>
 	  <font size="2">Air Quality Index <input type="text" id="aqiindex" size="1"></input> US AQI</font></br>
-	  <font size="2">Kecepatan Angin <input type="text" id="kecepatanangin" value=" " size="1"> m/s</font></br>
-	  <font size="2">Arah Angin <input type="text" id="arahangin" value=" " size="4"> °</font></br>
+	  <font size="2">Kecepatan Angin <input type="text" id="kecepatanangin" value=" " size="4"> m/s</font></br>
+	  <font size="2">Arah Angin <input type="text" id="arahangin" value=" " size="1"> °</font></br>
 	  <font size="2">Kelembapan <input type="text" id="kelembapan" value=" " size="1"> %</font></br>
 	  <font size="2">Suhu Udara <input type="text" id="suhuudara" value=" " size="1"> °C</font></br>
 	  <font size="2">Cuaca <input type="text" id="cuaca" value=" " size="10"></font></br>
@@ -119,7 +118,7 @@
 	  Tekanan : <input type="text" id="tekanan" value="354" size="1"> psig</br>
 	  Suhu Gas : <input type="text" id="suhugas" value="9" size="1"> °F</br>
 	  Flowrate : <input type="text" id="flowrate" value="150" size="1"> MMSCFD</br></br>
-	  <center><button onclick="simulasi()">Simulasikan</button></center></font>
+	  <center><button id="simulasikan" onclick="simulasi()">Simulasikan</button></center></font>
 	  <div id="hasilsimulasi">
 		<font size="2"><table style="width:239px">
 		<tr>
@@ -374,7 +373,7 @@
 	flowrate.value=detillokasi(nomorlokasi(pilihan))[2];
 	lintang.value=detillokasi(nomorlokasi(pilihan))[3];
 	bujur.value=detillokasi(nomorlokasi(pilihan))[4];
-	aqi();
+	aqi(); namalokasi();
 }
 	
 		function nomorlokasi(opsi) {
@@ -416,7 +415,6 @@
 			bujur=senarailokasi[nourut].position.lng;
 		mn = new google.maps.LatLng(lintang,bujur);
 		marker1.setPosition(mn);
-		//map.panTo(mn);
 		return [tekanan,suhugas,flowrate,lintang,bujur];
 		}
 			
@@ -424,16 +422,15 @@
     var zonamerah, zonaoranye, zonakuning;
 	//fungsiwaktu
        function initMap() {
-	   aqi();
+	   aqi(); namalokasi();
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 18,
-          center: {lat: 4.017443, lng: 98.275883}, //lokasi awal
+          center: {lat: 4.017443, lng: 98.275883}, //lokasi awal SKG PBR
           mapTypeId: 'hybrid',  //citra satelit disertai batas, nama tempat, dll
 		  mapTypeControl: true,
           mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
             mapTypeIds: ['roadmap', 'terrain', 'satellite', 'hybrid']}
-		    
         });
 	//lingkaran potensi dampak
 		var lingkaranmerah = new google.maps.Circle({
@@ -488,9 +485,19 @@
           draggable: true,
           animation: google.maps.Animation.DROP,
           position: {lat: 4.017443 , lng: 98.275883}
-		 // label: labels
         });
-        marker1.addListener('click', toggleBounce);
+        marker1.addListener('click', toggleBounce); //animasi mantul
+		
+	document.getElementById("simulasikan").addEventListener("click", function(){
+		map.setZoom(16);
+		map.setCenter(marker1.getPosition());
+	});
+	
+	document.getElementById("pilihlokasikejadian").addEventListener("click", function(){
+		//map.setZoom(16);
+		map.setZoom(8);
+	});
+		
 
 		//external KML url
 		var ctaLayer = new google.maps.KmlLayer({
@@ -503,7 +510,7 @@
 		map.panTo(new google.maps.LatLng(lati,long));
 	}
 
-		function startTime() {
+		function waktu() {
 			var today = new Date();
 			var dd = today.getDate();
 			var mm = today.getMonth()+1;
@@ -518,13 +525,9 @@
 			s = checkTime(s);
 			var namabulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 			document.getElementById('waktu').innerHTML = dd+" "+namabulan[mm]+" "+yy+" "+h + ":" + m + ":" + s + " WIB";
-			var ifr = document.getElementsByName('openweather')[0];
 			lat = marker1.getPosition().lat();
 			lng = marker1.getPosition().lng();
-			//document.getElementById('lintang').value = lat;
-			//document.getElementById('bujur').value = lng;
-			//kondisilingkungan();
-			var t = setTimeout(startTime, 1000);
+			var t = setTimeout(waktu, 1000);
 		}
 		function checkTime(i) {
 		if (i < 10) {i = "0" + i};  // menambah digit 0 untuk satuan
@@ -561,7 +564,6 @@
 		zonamerah.set('radius', 152);
 		zonamerah.set('center', marker1.position);
 		document.getElementById("hasilsimulasi").style.visibility = "visible";
-		
       }
 
 
@@ -571,7 +573,7 @@ xmlhttp.onreadystatechange = function() {
   if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
     var myObj = JSON.parse(xmlhttp.responseText);
 	aqiindex.value = myObj.data[0].aqi;
-	document.getElementById("namadaerah").innerHTML = myObj.data[0].city_name;
+	//document.getElementById("namadaerah").innerHTML = myObj.data[0].city_name;
 	kecepatanangin.value = myObj.data[0].wind_spd;
 	arahangin.value = myObj.data[0].wind_dir;
 	kelembapan.value = myObj.data[0].rh;
@@ -584,6 +586,18 @@ xmlhttp.open('GET', aa, true);
 xmlhttp.send();
 }
 
+function namalokasi(){
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+  if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    var myObj = JSON.parse(xmlhttp.responseText);
+	document.getElementById("namadaerah").innerHTML = myObj.results[0].address_components[1].long_name+", "+myObj.results[0].address_components[2].long_name+"</br>"+myObj.results[0].address_components[3].long_name+"</br>"+myObj.results[0].address_components[4].long_name+" "+myObj.results[0].address_components[6].long_name+", "+myObj.results[0].address_components[5].long_name;
+  }
+};
+var aa = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lintang.value+","+bujur.value+"&key=AIzaSyAx74v7Xf0TNQqF2wSUB5r-oEGBfnlls1Q";
+xmlhttp.open('GET', aa, true);
+xmlhttp.send();
+}
     </script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx74v7Xf0TNQqF2wSUB5r-oEGBfnlls1Q&libraries=visualization,places,geometry,drawing&callback=initMap">
