@@ -375,7 +375,7 @@ function animateMapZoomTo(map, targetZoom) {
 	flowrate.value=detillokasi(nomorlokasi(pilihan))[2];
 	lintang.value=detillokasi(nomorlokasi(pilihan))[3];
 	bujur.value=detillokasi(nomorlokasi(pilihan))[4];
-	aqi(); namalokasi();
+	aqi(); namalokasi("namadaerah",lintang.value,bujur.value);
 }
 	
 		function nomorlokasi(opsi) {
@@ -424,7 +424,7 @@ function animateMapZoomTo(map, targetZoom) {
     var zonamerah, zonaoranye, zonakuning;
 	//fungsiwaktu
        function initMap() {
-	   aqi(); namalokasi();
+	   aqi(); namalokasi("namadaerah",lintang.value,bujur.value);
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 18, disableDefaultUI: false,
           center: {lat: 4.017443, lng: 98.275883}, //lokasi awal SKG PBR
@@ -514,9 +514,9 @@ function animateMapZoomTo(map, targetZoom) {
 		animateMapZoomTo(map,8);
 		map.setCenter(marker1.getPosition());
 	});
-	
+	var infoWindow = new google.maps.InfoWindow;
 	document.getElementById("lokasisaya").addEventListener("click", function(){
-		lokasisaya();
+		lokasisaya(infoWindow,map);
 	});
 
 		//external KML url
@@ -525,23 +525,18 @@ function animateMapZoomTo(map, targetZoom) {
           map: map
         });
       }
-	  function lokasisaya(){
+	  function lokasisaya(infoWindow,map){
 	  var infoWindow = new google.maps.InfoWindow;
-	document.getElementById("lokasisaya").addEventListener("click", function(){
-		lokasisaya();
-	});
-		  if (navigator.geolocation) {
+          if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
-		  
             var pos = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
-lintang.value=position.coords.latitude; bujur.value=position.coords.longitude;
+			namalokasi("gps",lat,lng);
             infoWindow.setPosition(pos);
-            infoWindow.setContent('Lokasi Anda');
+            infoWindow.setContent('Lokasi Saya</br>'+'<div id="gps"></div>');
             infoWindow.open(map);
-            map.setCenter(pos);
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
           });
@@ -549,12 +544,12 @@ lintang.value=position.coords.latitude; bujur.value=position.coords.longitude;
           // Browser doesn't support Geolocation
           handleLocationError(false, infoWindow, map.getCenter());
         }
-	  }
+      }
 	  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
         infoWindow.setContent(browserHasGeolocation ?
-                              'Layanan geolocation gagal' :
-                              'Peramban tidak mendukung/mengizinkan geolocation');
+                              'Layanan GPS gagal' :
+                              'Peramban Anda tidak mendukung GPS');
         infoWindow.open(map);
       }
 
@@ -621,7 +616,6 @@ xmlhttp.onreadystatechange = function() {
   if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
     var myObj = JSON.parse(xmlhttp.responseText);
 	aqiindex.value = myObj.data[0].aqi;
-	//document.getElementById("namadaerah").innerHTML = myObj.data[0].city_name;
 	kecepatanangin.value = myObj.data[0].wind_spd;
 	arahangin.value = myObj.data[0].wind_dir;
 	kelembapan.value = myObj.data[0].rh;
@@ -634,15 +628,15 @@ xmlhttp.open('GET', aa, true);
 xmlhttp.send();
 }
 
-function namalokasi(){
+function namalokasi(nama,lintang,bujur){
 var xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
   if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
     var myObj = JSON.parse(xmlhttp.responseText);
-	document.getElementById("namadaerah").innerHTML = myObj.results[0].address_components[1].long_name+", "+myObj.results[0].address_components[2].long_name+"</br>"+myObj.results[0].address_components[3].long_name+"</br>"+myObj.results[0].address_components[4].long_name+" "+myObj.results[0].address_components[6].long_name+", "+myObj.results[0].address_components[5].long_name;
+	document.getElementById(nama).innerHTML = myObj.results[0].address_components[1].long_name+", "+myObj.results[0].address_components[2].long_name+"</br>"+myObj.results[0].address_components[3].long_name+"</br>"+myObj.results[0].address_components[4].long_name+" "+myObj.results[0].address_components[6].long_name+", "+myObj.results[0].address_components[5].long_name;
   }
 };
-var aa = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lintang.value+","+bujur.value+"&key=AIzaSyAx74v7Xf0TNQqF2wSUB5r-oEGBfnlls1Q";
+var aa = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lintang+","+bujur+"&key=AIzaSyAx74v7Xf0TNQqF2wSUB5r-oEGBfnlls1Q";
 xmlhttp.open('GET', aa, true);
 xmlhttp.send();
 }
