@@ -535,7 +535,7 @@ function animateMapZoomTo(map, targetZoom) {
             };
 			namalokasi("gps",lat,lng);
             infoWindow.setPosition(pos);
-            infoWindow.setContent('Lokasi Saya</br>'+'<div id="gps"></div>');
+            infoWindow.setContent('Lokasi Saya</br>'+'<div id="gps"></div>'+lat+','+lng);
             infoWindow.open(map);
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
