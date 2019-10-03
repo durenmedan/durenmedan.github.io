@@ -57,10 +57,10 @@
   </head>
 
   <body onload="waktu()">
-	<div id="hide-panel">
+	<div id="hide-panel" align="right">
 	<img width=20% height=20% title="Sembunyikan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/sembunyikan.png onclick="toggleFloatingPanel()"/><img width=20% height=20% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br>
 	</div>
-	<div id="show-panel">
+	<div id="show-panel" align="right">
 		<img width=20% height=20% title="Tampilkan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilkan.png onclick="toggleFloatingPanel()"/><img width=20% height=20% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br></br>
 	</div>
 	<div id="tampilanawal">
@@ -348,6 +348,17 @@
 			flowrate: flowratearun+flowratemedco
           }  
         ];
+		
+function animateMapZoomTo(map, targetZoom) {
+    var currentZoom = arguments[2] || map.getZoom();
+    if (currentZoom != targetZoom) {
+        google.maps.event.addListenerOnce(map, 'zoom_changed', function (event) {
+            animateMapZoomTo(map, targetZoom, currentZoom + (targetZoom > currentZoom ? 1 : -1));
+        });
+        setTimeout(function(){ map.setZoom(currentZoom) }, 300);
+    }
+}
+
 	function cariterdekat(lat,lng){
 	var nilai=100;
 	var min;
@@ -492,8 +503,10 @@
         });
         marker1.addListener('click', toggleBounce); //animasi mantul
 		
+		
+		
 	document.getElementById("simulasikan").addEventListener("click", function(){
-		map.setZoom(16);
+		animateMapZoomTo(map,16);
 		map.setCenter(marker1.getPosition());
 	});
 	
