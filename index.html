@@ -27,7 +27,7 @@
         right: 0%;
         padding: 0px;
         position: absolute;
-        bottom: -43%;
+        bottom: -30%;
 		visibility: hidden;
       }
 	  #tampilanawal {
@@ -66,8 +66,9 @@
 	<div id="tampilanawal">
 	</div>
     <div id="floating-panel"> 
-	  <b>Panel Kendali</b></br>
+	  <span style="background-color: #000000;color: #FFFFFF"><b>Panel Kendali</b></span></br>
 	  	<div id="waktu"></div>
+		<b><font size="2">Posisi Kejadian Kebakaran</font><div id="masukkan"></b>
 	  	<font size="2">Pilih Lokasi 
 		<select id="pilihlokasikejadian" name="pilihlokasi" onChange="sesuaikan(this.value)">
 			<option value="smarun">SM Arun</option>
@@ -95,7 +96,7 @@
 			<option value="smblw">SM Belawan</option>
 			<option value="manualinput">Manual Input Koordinat</option></font>
 		</select></br>
-	  <b><font size="2">Posisi Kejadian Kebakaran</font><div id="masukkan"></b><div id="namadaerah"></div></div>
+	  <div id="namadaerah"></div></div>
 	  <font size="2"><input type="text" id="lintang" value="4.017443" size="1"> Lintang Utara, </font><font size="2"><input type="text" id="bujur" value="98.275883" size="1"> Bujur Barat</font></br></br>
 	  <b><font size="2">Kondisi Lingkungan</font></b></br>
 	  <font size="2">Air Quality Index <input type="text" id="aqiindex" size="1"></input> US AQI</font></br>
@@ -113,28 +114,20 @@
 	  <div id="hasilsimulasi">
 		<font size="2"><table style="width:239px">
 		<tr>
-			<th>Zona</th>
-			<th bgcolor="red">Merah</th>
-			<th bgcolor="orange">Oranye</th>
-			<th bgcolor="yellow">Kuning</th>
+			<th style="width:30%">Zona</th>
+			<th>Bahaya</th>
 		</tr>
 		<tr>
-			<td>Radius (meter)</td>
-			<td><center><input style="border:none" type="text" id="rzonamerah" value="152" size="1"></center></td>
-			<td><center><input style="border:none" type="text" id="rzonaoranye" value="216" size="1"></center></td>
-			<td><center><input style="border:none" type="text" id="rzonakuning" value="336" size="1"></center></td>
+			<td bgcolor="red"><center>Merah</center></td>
+			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonamerah" value="152"> m, berpotensi korban jiwa dalam 60 detik</td>
 		</tr>
 		<tr>
-			<td>Daya ledak (kW/m²)</td>
-			<td><center>10</center></td>
-			<td><center>5</center></td>
-			<td><center>2</center></td>
+			<td bgcolor="orange"><center>Oranye</center></td>
+			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonaoranye" value="216" size="1"> m, luka bakar parah dalam 60 detik</td>
 		</tr>
-				<tr width="1">
-			<td>Dampak</td>
-			<td>Berpotensi korban jiwa dalam 60 detik</td>
-			<td>Luka bakar parah dalam 60 detik</td>
-			<td>Luka bakar dalam 60 detik</td>
+		<tr>
+			<td bgcolor="yellow"><center>Kuning</center></td>
+			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonaoranye" value="336" size="1"> m, luka bakar dalam 60 detik</td>
 		</tr>
 		</table></font></div>
     </div>
@@ -511,7 +504,7 @@ function animateMapZoomTo(map, targetZoom) {
 		
 		
 	document.getElementById("simulasikan").addEventListener("click", function(){
-		animateMapZoomTo(map,16);
+		animateMapZoomTo(map,17);
 		map.setCenter(marker1.getPosition());
 	});
 	
