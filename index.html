@@ -58,10 +58,10 @@
 
   <body onload="waktu()">
 	<div id="hide-panel" align="right">
-	<img width=20% height=20% title="Sembunyikan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/sembunyikan.png onclick="toggleFloatingPanel()"/><img width=20% height=20% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br>
+	<img width=12% height=12% title="Sembunyikan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/sembunyikan.png onclick="toggleFloatingPanel()"/><img width=12% height=12% id="lokasisaya" title="Lokasi Saya" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/lokasisaya.png><img width=12% height=12% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br></br>
 	</div>
 	<div id="show-panel" align="right">
-		<img width=20% height=20% title="Tampilkan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilkan.png onclick="toggleFloatingPanel()"/><img width=20% height=20% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br></br>
+		<img width=12% height=12% title="Tampilkan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilkan.png onclick="toggleFloatingPanel()"/><img width=12% height=12% id="lokasisaya" title="Lokasi Saya" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/lokasisaya.png><img width=12% height=12% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br></br>
 	</div>
 	<div id="tampilanawal">
 	</div>
@@ -426,7 +426,7 @@ function animateMapZoomTo(map, targetZoom) {
        function initMap() {
 	   aqi(); namalokasi();
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 18,
+          zoom: 18, disableDefaultUI: false,
           center: {lat: 4.017443, lng: 98.275883}, //lokasi awal SKG PBR
           mapTypeId: 'hybrid',  //citra satelit disertai batas, nama tempat, dll
 		  zoomControl: true,
@@ -512,8 +512,12 @@ function animateMapZoomTo(map, targetZoom) {
 	
 	document.getElementById("pilihlokasikejadian").addEventListener("click", function(){
 		animateMapZoomTo(map,8);
+		map.setCenter(marker1.getPosition());
 	});
-		
+	
+	document.getElementById("lokasisaya").addEventListener("click", function(){
+		lokasisaya();
+	});
 
 		//external KML url
 		var ctaLayer = new google.maps.KmlLayer({
@@ -521,10 +525,38 @@ function animateMapZoomTo(map, targetZoom) {
           map: map
         });
       }
-	  
-	  function perbesar(a,b) {
-		map.panTo(new google.maps.LatLng(lati,long));
-	}
+	  function lokasisaya(){
+	  var infoWindow = new google.maps.InfoWindow;
+	document.getElementById("lokasisaya").addEventListener("click", function(){
+		lokasisaya();
+	});
+		  if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+		  
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+lintang.value=position.coords.latitude; bujur.value=position.coords.longitude;
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Lokasi Anda');
+            infoWindow.open(map);
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+	  }
+	  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Layanan geolocation gagal' :
+                              'Peramban tidak mendukung/mengizinkan geolocation');
+        infoWindow.open(map);
+      }
 
 		function waktu() {
 			var today = new Date();
