@@ -114,21 +114,21 @@
 		<font size="2"><table style="width:239px">
 		<tr>
 			<th>Zona</th>
-			<th>Merah</th>
-			<th>Oranye</th>
-			<th>Kuning</th>
+			<th bgcolor="red">Merah</th>
+			<th bgcolor="orange">Oranye</th>
+			<th bgcolor="yellow">Kuning</th>
 		</tr>
 		<tr>
 			<td>Radius (meter)</td>
-			<td>152</td>
-			<td>216</td>
-			<td>336</td>
+			<td><center><input style="border:none" type="text" id="rzonamerah" value="152" size="1"></center></td>
+			<td><center><input style="border:none" type="text" id="rzonaoranye" value="216" size="1"></center></td>
+			<td><center><input style="border:none" type="text" id="rzonakuning" value="336" size="1"></center></td>
 		</tr>
 		<tr>
 			<td>Daya ledak (kW/m²)</td>
-			<td>10</td>
-			<td>5</td>
-			<td>2</td>
+			<td><center>10</center></td>
+			<td><center>5</center></td>
+			<td><center>2</center></td>
 		</tr>
 				<tr width="1">
 			<td>Dampak</td>
@@ -453,9 +453,10 @@ function animateMapZoomTo(map, targetZoom) {
             strokeOpacity: 0.8,
             strokeWeight: 2,
             fillColor: '#FF0000',
-            fillOpacity: 0.8,
+            fillOpacity: 0.5,
             map: map, 
             center: {lat: 4.017443, lng: 98.275883},
+			zIndex: 3,
             radius: 0
           });
 		var lingkaranoranye = new google.maps.Circle({
@@ -463,9 +464,10 @@ function animateMapZoomTo(map, targetZoom) {
             strokeOpacity: 0.8,
             strokeWeight: 2,
             fillColor: '#FF9900',
-            fillOpacity: 0.4,
+            fillOpacity: 0.5,
             map: map,
             center: {lat: 4.017443, lng: 98.275883},
+			zIndex: 2,
             radius: 0
           });
 		var lingkarankuning = new google.maps.Circle({
@@ -473,9 +475,10 @@ function animateMapZoomTo(map, targetZoom) {
             strokeOpacity: 0.8,
             strokeWeight: 2,
             fillColor: '#FFFF00',
-            fillOpacity: 0.2,
+            fillOpacity: 0.5,
             map: map,
             center: {lat: 4.017443, lng: 98.275883},
+			zIndex: 1,
             radius: 0
           });
 		  zonamerah = lingkaranmerah;
@@ -490,6 +493,7 @@ function animateMapZoomTo(map, targetZoom) {
             position: feature.position,
             icon: feature.icon,
             map: map,
+			zIndex: 2,
 			title: feature.title
           });
         });
@@ -497,6 +501,7 @@ function animateMapZoomTo(map, targetZoom) {
         marker1 = new google.maps.Marker({
           map: map,
 		  icon: manualicon,
+		  zIndex: 1,
           draggable: true,
           animation: google.maps.Animation.DROP,
           position: {lat: 4.017443 , lng: 98.275883}
