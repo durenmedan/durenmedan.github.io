@@ -120,7 +120,7 @@
 			<option value="40">LBCV 25</option>
 			<option value="41">LBCV 26</option>
 			<option value="42">LBCV 27</option>			
-			
+		
 		</font></select></br>
 	  <div id="namadaerah"></div></div>
 	  <font size="2"><input type="text" id="lintang" value="4.017443" size="5"> Lintang Utara,</font><font size="2"><input type="text" id="bujur" value="98.275883" size="5"> Bujur Barat</font></br></br>
@@ -136,7 +136,7 @@
 	  Tekanan : <input type="text" id="tekanan" value="354" size="1"> psig</br>
 	  Suhu Gas : <input type="text" id="suhugas" value="9" size="1"> °F</br>
 	  Flowrate : <input type="text" id="flowrate" value="150" size="1"> MMSCFD</br></br>
-	  <center><button id="simulasikan" onclick="simulasi()">Simulasikan</button></center></font>
+	  <center><button id="simulasikan">Simulasikan</button></center></font>
 	  <div id="hasilsimulasi">
 		<font size="2"><table style="width:239px">
 		<tr>
@@ -153,7 +153,7 @@
 		</tr>
 		<tr>
 			<td bgcolor="yellow"><center>Kuning</center></td>
-			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonaoranye" value="336" size="1"> m, luka bakar dalam 60 detik</td>
+			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonakuning" value="336" size="1"> m, luka bakar dalam 60 detik</td>
 		</tr>
 		</table></font></div>
     </div>
@@ -161,6 +161,7 @@
     <div id="map"></div>
     <script>
 	//senarai konstanta parameter
+	var zonamerah, zonaoranye, zonakuning;
 	var flowratearun = 120;
 	var flowratemedco = 50;
 	var tekananarun = 620;
@@ -563,7 +564,6 @@ function animateMapZoomTo(map, targetZoom) {
 		}
 			
 	//tarik data openweather API
-    var zonamerah, zonaoranye, zonakuning;
 	//fungsiwaktu
        function initMap() {
 	   aqi(); namalokasi("namadaerah",lintang.value,bujur.value);
@@ -589,46 +589,7 @@ function animateMapZoomTo(map, targetZoom) {
               position: google.maps.ControlPosition.LEFT_TOP
           }
         });
-	//lingkaran potensi dampak
-		var lingkaranmerah = new google.maps.Circle({
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.5,
-            map: map, 
-            center: {lat: 4.017443, lng: 98.275883},
-			zIndex: 3,
-            radius: 0
-          });
-		var lingkaranoranye = new google.maps.Circle({
-            strokeColor: '#FF9900',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FF9900',
-            fillOpacity: 0.5,
-            map: map,
-            center: {lat: 4.017443, lng: 98.275883},
-			zIndex: 2,
-            radius: 0
-          });
-		var lingkarankuning = new google.maps.Circle({
-            strokeColor: '#FFFF00',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FFFF00',
-            fillOpacity: 0.5,
-            map: map,
-            center: {lat: 4.017443, lng: 98.275883},
-			zIndex: 1,
-            radius: 0
-          });
-		  zonamerah = lingkaranmerah;
-		  zonaoranye = lingkaranoranye;
-		  zonakuning = lingkarankuning;
-
-		
-
+		  
 		//membuat penanda senarai lokasi
         senarailokasi.forEach(function(feature) {
           var markercoba = new google.maps.Marker({
@@ -646,17 +607,34 @@ function animateMapZoomTo(map, targetZoom) {
 		  zIndex: 1,
           draggable: true,
           animation: google.maps.Animation.DROP,
-          position: {lat: 4.017443 , lng: 98.275883}
+          position: {lat: 4.017443 , lng: 98.275883}//default SKG PBR
         });
         marker1.addListener('click', toggleBounce); //animasi mantul
 		
 		
 		
+	//document.getElementById("simulasikan").addEventListener("click", function(){
+	//	lingkaranmerah.set('radius', parseFloat(rzonamerah.value));
+	//	lingkaranmerah.set('center', marker1.position);
+	//	lingkaranoranye.set('radius', parseFloat(rzonaoranye.value));
+	//	lingkaranoranye.set('center', marker1.position);
+	//	lingkarankuning.set('radius', parseFloat(rzonakuning.value));
+	//	lingkarankuning.set('center', marker1.position);
+		
+
 	document.getElementById("simulasikan").addEventListener("click", function(){
+		//zonakuning.setMap(null); zonamerah.setMap(null); zonaoranye.setMap(null);
+		zonakuning.set('radius', parseFloat(rzonakuning.value));
+		zonakuning.set('center', marker1.position);
+		zonaoranye.set('radius', parseFloat(rzonaoranye.value));
+		zonaoranye.set('center', marker1.position);
+		zonamerah.set('radius', parseFloat(rzonamerah.value));
+		zonamerah.set('center', marker1.position);
+		document.getElementById("hasilsimulasi").style.visibility = "visible";
 		animateMapZoomTo(map,17);
 		map.setCenter(marker1.getPosition());
 	});
-	
+
 	document.getElementById("pilihlokasikejadian").addEventListener("change", function(){
 		animateMapZoomTo(map,8);
 		map.setCenter(marker1.getPosition());
@@ -665,6 +643,40 @@ function animateMapZoomTo(map, targetZoom) {
 	document.getElementById("lokasisaya").addEventListener("click", function(){
 		lokasisaya(infoWindow,map);
 	});
+//lingkaran potensi dampak
+		var zonamerah = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.5,
+            map: map, 
+            center: {lat: 4.017443, lng: 98.275883},
+			zIndex: 3,
+            radius: 0
+          });
+		var zonaoranye = new google.maps.Circle({
+            strokeColor: '#FF9900',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF9900',
+            fillOpacity: 0.5,
+            map: map,
+            center: {lat: 4.017443, lng: 98.275883},
+			zIndex: 2,
+            radius: 0
+          });
+		var zonakuning = new google.maps.Circle({
+            strokeColor: '#FFFF00',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FFFF00',
+            fillOpacity: 0.5,
+            map: map,
+            center: {lat: 4.017443, lng: 98.275883},
+			zIndex: 1,
+            radius: 0
+          });
 
 		//external KML url
 		var ctaLayer = new google.maps.KmlLayer({
@@ -672,6 +684,11 @@ function animateMapZoomTo(map, targetZoom) {
           map: map
         });
       }
+	  
+	  function lintangbujur(lintang,bujur){
+	  lb = new google.maps.LatLng(lintang,bujur);
+	  return lb;
+	  }
 	  function lokasisaya(infoWindow,map){
 	  var infoWindow = new google.maps.InfoWindow;
           if (navigator.geolocation) {
@@ -700,6 +717,7 @@ function animateMapZoomTo(map, targetZoom) {
                               'Peramban Anda tidak mendukung GPS');
         infoWindow.open(map);
       }
+
 function ukurjarak(lintang1, bujur1, lintang2, bujur2){ 
     var R = 6378.137; // Jari-jari bumi dalam satuan km
     var dlintang = lintang2 * Math.PI / 180 - lintang1 * Math.PI / 180;
@@ -755,16 +773,6 @@ function ukurjarak(lintang1, bujur1, lintang2, bujur2){
 			document.getElementById("hide-panel").style.visibility = "visible";
 			document.getElementById("show-panel").style.visibility = "hidden";
 		}
-      }
-
-      function simulasi() {
-		zonakuning.set('radius', 336);
-		zonakuning.set('center', marker1.position);
-		zonaoranye.set('radius', 216);
-		zonaoranye.set('center', marker1.position);
-		zonamerah.set('radius', 152);
-		zonamerah.set('center', marker1.position);
-		document.getElementById("hasilsimulasi").style.visibility = "visible";
       }
 
 
