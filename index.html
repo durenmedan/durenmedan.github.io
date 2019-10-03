@@ -535,7 +535,8 @@ function animateMapZoomTo(map, targetZoom) {
             };
 			namalokasi("gps",pos.lat,pos.lng);
             infoWindow.setPosition(pos);
-            infoWindow.setContent('Lokasi Saya</br>'+'<div id="gps"></div>'+pos.lat+','+pos.lng);
+			a=ukurjarak(pos.lat,pos.lng,lintang.value,bujur.value);
+            infoWindow.setContent('Lokasi Saya</br>'+'<div id="gps"></div>Koordinat '+pos.lat+','+pos.lng+'</br>Radius = '+parseInt(a)+' meter');
             infoWindow.open(map);
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
@@ -552,7 +553,17 @@ function animateMapZoomTo(map, targetZoom) {
                               'Peramban Anda tidak mendukung GPS');
         infoWindow.open(map);
       }
-
+function ukurjarak(lintang1, bujur1, lintang2, bujur2){ 
+    var R = 6378.137; // Jari-jari bumi dalam satuan km
+    var dlintang = lintang2 * Math.PI / 180 - lintang1 * Math.PI / 180;
+    var dbujur = bujur2 * Math.PI / 180 - bujur1 * Math.PI / 180;
+    var a = Math.sin(dlintang/2) * Math.sin(dlintang/2) +
+    Math.cos(lintang1 * Math.PI / 180) * Math.cos(lintang2 * Math.PI / 180) *
+    Math.sin(dbujur/2) * Math.sin(dbujur/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c;
+    return d * 1000; // meters
+}
 		function waktu() {
 			var today = new Date();
 			var dd = today.getDate();
