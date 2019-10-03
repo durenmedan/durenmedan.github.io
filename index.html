@@ -136,7 +136,7 @@
 	  Tekanan : <input type="text" id="tekanan" value="354" size="1"> psig</br>
 	  Suhu Gas : <input type="text" id="suhugas" value="9" size="1"> °F</br>
 	  Flowrate : <input type="text" id="flowrate" value="150" size="1"> MMSCFD</br></br>
-	  <center><button id="simulasikan">Simulasikan</button></center></font>
+	  <center><button id="simulasikan">Simulasikan</button><button id="bersihkan">Bersihkan</button></center></font>
 	  <div id="hasilsimulasi">
 		<font size="2"><table style="width:239px">
 		<tr>
@@ -610,25 +610,25 @@ function animateMapZoomTo(map, targetZoom) {
           position: {lat: 4.017443 , lng: 98.275883}//default SKG PBR
         });
         marker1.addListener('click', toggleBounce); //animasi mantul
-		
-		
-		
-	//document.getElementById("simulasikan").addEventListener("click", function(){
-	//	lingkaranmerah.set('radius', parseFloat(rzonamerah.value));
-	//	lingkaranmerah.set('center', marker1.position);
-	//	lingkaranoranye.set('radius', parseFloat(rzonaoranye.value));
-	//	lingkaranoranye.set('center', marker1.position);
-	//	lingkarankuning.set('radius', parseFloat(rzonakuning.value));
-	//	lingkarankuning.set('center', marker1.position);
-		
 
 	document.getElementById("simulasikan").addEventListener("click", function(){
-		//zonakuning.setMap(null); zonamerah.setMap(null); zonaoranye.setMap(null);
 		zonakuning.set('radius', parseFloat(rzonakuning.value));
 		zonakuning.set('center', marker1.position);
 		zonaoranye.set('radius', parseFloat(rzonaoranye.value));
 		zonaoranye.set('center', marker1.position);
 		zonamerah.set('radius', parseFloat(rzonamerah.value));
+		zonamerah.set('center', marker1.position);
+		document.getElementById("hasilsimulasi").style.visibility = "visible";
+		animateMapZoomTo(map,17);
+		map.setCenter(marker1.getPosition());
+	});
+	
+	document.getElementById("bersihkan").addEventListener("click", function(){
+		zonakuning.set('radius', 0);
+		zonakuning.set('center', marker1.position);
+		zonaoranye.set('radius', 0);
+		zonaoranye.set('center', marker1.position);
+		zonamerah.set('radius', 0);
 		zonamerah.set('center', marker1.position);
 		document.getElementById("hasilsimulasi").style.visibility = "visible";
 		animateMapZoomTo(map,17);
