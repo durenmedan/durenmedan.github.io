@@ -57,10 +57,10 @@
   </head>
 
   <body onload="waktu()">
-	<div id="hide-panel" align="right">
+	<div id="hide-panel" align="center">
 	<img width=20% height=20% title="Sembunyikan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/sembunyikan.png onclick="toggleFloatingPanel()"/><img width=20% height=20% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br>
 	</div>
-	<div id="show-panel" align="right">
+	<div id="show-panel" align="center">
 		<img width=20% height=20% title="Tampilkan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilkan.png onclick="toggleFloatingPanel()"/><img width=20% height=20% title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br></br>
 	</div>
 	<div id="tampilanawal">
@@ -434,9 +434,6 @@ function animateMapZoomTo(map, targetZoom) {
               position: google.maps.ControlPosition.LEFT_TOP
           },		  
           fullscreenControl: true,
-          fullscreenControlOptions: {
-              position: google.maps.ControlPosition.TOP_LEFT
-          },
 		  mapTypeControl: true,
           mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
