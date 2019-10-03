@@ -97,7 +97,7 @@
 			<option value="manualinput">Manual Input Koordinat</option></font>
 		</select></br>
 	  <div id="namadaerah"></div></div>
-	  <font size="2"><input type="text" id="lintang" value="4.017443" size="1"> Lintang Utara, </font><font size="2"><input type="text" id="bujur" value="98.275883" size="1"> Bujur Barat</font></br></br>
+	  <font size="2"><input type="text" id="lintang" value="4.017443" size="6"> Lintang Utara</br></font><font size="2"><input type="text" id="bujur" value="98.275883" size="6"> Bujur Barat</font></br></br>
 	  <b><font size="2">Kondisi Lingkungan</font></b></br>
 	  <font size="2">Air Quality Index <input type="text" id="aqiindex" size="1"></input> US AQI</font></br>
 	  <font size="2">Kecepatan Angin <input type="text" id="kecepatanangin" value=" " size="4"> m/s</font></br>
@@ -332,14 +332,30 @@
 			suhugas: 75,
 			flowrate: flowratearun+flowratemedco
           },{		  
-            position: {lat:3.773384, lng:98.671206}, //SM Belawan, no urut 23
+            position: {lat:5.23531, lng:97.03183}, //SM PIM, no urut 23
             type: 'sm',
-			title: 'SM Belawan - KP334',
+			title: 'SM Pupuk Iskandar Muda (PIM)',
 			icon: smicon,
 			tekanan: tekananpbr-50,
 			suhugas: 75,
 			flowrate: flowratearun+flowratemedco
-          }  
+          },{		  
+            position: {lat:5.24512, lng:97.02443}, //SM AAF, no urut 24
+            type: 'sm',
+			title: 'SM Asean Aceh Fertilizer (AAF)',
+			icon: smicon,
+			tekanan: tekananpbr-50,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          },{		  
+            position: {lat:5.18879, lng:96.94412}, //SM KKA, no urut 25 
+            type: 'sm',
+			title: 'SM Kertas Kraft Aceh (KKA)',
+			icon: smicon,
+			tekanan: tekananpbr-50,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco
+          }      
         ];
 		
 function animateMapZoomTo(map, targetZoom) {
@@ -642,7 +658,7 @@ var xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
   if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
     var myObj = JSON.parse(xmlhttp.responseText);
-	document.getElementById(nama).innerHTML = myObj.results[0].address_components[1].long_name+", "+myObj.results[0].address_components[2].long_name+"</br>"+myObj.results[0].address_components[3].long_name+"</br>"+myObj.results[0].address_components[4].long_name+" "+myObj.results[0].address_components[6].long_name+", "+myObj.results[0].address_components[5].long_name;
+	document.getElementById(nama).innerHTML = myObj.results[1].address_components[0].long_name+", "+myObj.results[1].address_components[1].long_name+"</br>"+myObj.results[1].address_components[2].long_name+"</br>"+myObj.results[1].address_components[3].long_name+" "+myObj.results[3].address_components[0].long_name;
   }
 };
 var aa = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lintang+","+bujur+"&key=AIzaSyAx74v7Xf0TNQqF2wSUB5r-oEGBfnlls1Q";
