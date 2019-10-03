@@ -550,7 +550,7 @@ function animateMapZoomTo(map, targetZoom) {
 			namalokasi("gps",pos.lat,pos.lng);
             infoWindow.setPosition(pos);
 			a=ukurjarak(pos.lat,pos.lng,lintang.value,bujur.value);
-            infoWindow.setContent('Lokasi Saya</br>'+'<div id="gps"></div>Koordinat '+pos.lat+','+pos.lng+'</br>Radius = '+parseInt(a)+' meter');
+            infoWindow.setContent('<div style="word-wrap: break-word; width: 239px"><b>Lokasi Saya</b></br>'+'<div id="gps"></div>'+pos.lat+' Lintang Utara</br>'+pos.lng+' Bujur Barat</br>Radius = '+parseInt(a)+' meter</div>');
             infoWindow.open(map);
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
@@ -658,7 +658,7 @@ var xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
   if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
     var myObj = JSON.parse(xmlhttp.responseText);
-	document.getElementById(nama).innerHTML = myObj.results[1].address_components[0].long_name+", "+myObj.results[1].address_components[1].long_name+"</br>"+myObj.results[1].address_components[2].long_name+"</br>"+myObj.results[1].address_components[3].long_name+" "+myObj.results[3].address_components[0].long_name;
+	document.getElementById(nama).innerHTML = '<div style="word-wrap: break-word; width: 239px">'+myObj.results[0].formatted_address+'</div>';
   }
 };
 var aa = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lintang+","+bujur+"&key=AIzaSyAx74v7Xf0TNQqF2wSUB5r-oEGBfnlls1Q";
