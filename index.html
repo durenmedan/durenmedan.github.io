@@ -704,7 +704,7 @@ function animateMapZoomTo(map, targetZoom) {
 			namalokasi("gps",pos.lat,pos.lng);
             infoWindow.setPosition(pos);
 			a=ukurjarak(pos.lat,pos.lng,lintang.value,bujur.value);
-            infoWindow.setContent('<div style="word-wrap: break-word; width: 239px"><b>Lokasi Saya</b></br>'+'<div id="gps"></div>'+pos.lat+' Lintang Utara</br>'+pos.lng+' Bujur Barat</br>Radius = '+parseInt(a)+' meter</div>');
+            infoWindow.setContent('<div style="word-wrap: break-word; width: 239px"><b>Lokasi Saya</b></br>'+'<div id="gps"></div>'+pos.lat+' Lintang Utara</br>'+pos.lng+' Bujur Barat</br>Radius = '+a.toLocaleString()+' meter</div>');
             infoWindow.open(map);
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
