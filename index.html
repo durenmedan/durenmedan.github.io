@@ -129,12 +129,13 @@
 	  <div id="namadaerah"></div></div>
 	  <font size="2"><input type="text" id="lintang" value="4.017443" size="5"> Lintang Utara,</font><font size="2"><input type="text" id="bujur" value="98.275883" size="5"> Bujur Barat</font></br></br>
 	  <b><font size="2">Kondisi Lingkungan</font></b></br>
+	  <table style="width:239px"><th style="width:200px">
 	  <font size="2">Air Quality Index <input type="text" id="aqiindex" size="1"></input> US AQI</font></br>
 	  <font size="2">Kecepatan Angin <input type="text" id="kecepatanangin" value=" " size="4"> m/s</font></br>
 	  <font size="2">Sudut Sumber Angin <input type="text" id="arahangin" value=" " size="1"> °</font></br>
 	  <font size="2">Kelembapan <input type="text" id="kelembapan" value=" " size="1"> %</font></br>
 	  <font size="2">Suhu Udara <input type="text" id="suhuudara" value=" " size="1"> °C</font></br>
-	  <font size="2">Cuaca <input type="text" id="cuaca" value=" " size="10"></font></br>
+	  <font size="2">Cuaca <input type="text" id="cuaca" value=" " size="10"></th><th><img id="awan" src="" width="30"></th></font></br></table>
 	  </br> 
 	  <font size="2"><b>Data Penyaluran</b></br>
 	  Tekanan : <input type="text" id="tekanan" value="432.65" size="3"> psig</br>
@@ -803,6 +804,8 @@ xmlhttp.onreadystatechange = function() {
 	kelembapan.value = myObj.data[0].rh;
 	suhuudara.value = myObj.data[0].temp;
 	cuaca.value = myObj.data[0].weather.description;
+	icon = "https://www.weatherbit.io/static/img/icons/"+myObj.data[0].weather.icon+".png";
+	awan.src = icon;
   }
 };
 var aa = "https://api.weatherbit.io/v2.0/current?lat="+lintang.value+"&lon="+bujur.value+"&key=b57ca6ae2ee04e68ba19f3a6299a6a3e&lang=id";
