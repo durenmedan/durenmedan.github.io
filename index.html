@@ -963,7 +963,7 @@ xmlhttp.onreadystatechange = function() {
 	document.getElementById(nama).innerHTML = '<div style="word-wrap: break-word; width: 239px">'+myObj.results[0].formatted_address+'</div>';
 	namalokasidetil.value = myObj.results[0].formatted_address;
 	document.getElementById("tautan").setAttribute("href",
-	"https://api.whatsapp.com/send?phone=628126038000&text=*https://durenmedan.uk*%0A%0A*Laporan*%20*Kejadian*%20*Kebakaran*%20*:*"
+	"https://api.whatsapp.com/send?phone=628126038000&text=*https://durenmedan.uk*%0A%0A*Laporan*%20*Kejadian*%20*Kebakaran*%20*:*%0A"
 	+namalokasidetil.value.split(" ").join("%20")
 	+"%0A"
 	+lintang
