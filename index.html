@@ -33,7 +33,7 @@
         right: 0%;
         padding: 0px;
         position: absolute;
-        bottom: -40%;
+        bottom: -45%;
 		visibility: hidden;
       }
 	  #tampilanawal {
@@ -148,7 +148,7 @@
 			<th>Bahaya</th>
 		</tr>
 		<tr>
-			<td bgcolor="red"><center>Merah</br><font size="1">q &#62; 10kW/m²</font></center></td>
+			<td bgcolor="red"><center>Merah</br><font size="1">q&#62;10kW/m²</font></center></td>
 			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonamerah" value="152"> m, berpotensi korban jiwa dalam 60 detik</td>
 		</tr>
 		<tr>
@@ -159,7 +159,11 @@
 			<td bgcolor="yellow"><center>Kuning</br><font size="1">2kW/m²&#60;q&#60;5kW/m²</font></center></td>
 			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonakuning" value="336" size="1"> m, luka bakar dalam 60 detik</td>
 		</tr>
-		</table></font></div>
+		</table>
+		ERP terdekat : <textarea maxlength="80" rows="2" rows="100" style="width:239px;border:none;overflow:hidden;resize:none;font-size:10px" id="erpterdekat" name="erpterdekat">Pertamina Gas NSA 08128789263 & RU II Brandan 081376120930</textarea></br>
+		RS terdekat : <input style="border:none;" type="text" id="rsterdekat" value="RSPPB (0620) 322455"></br>
+		Damkar terdekat : <input style="border:none;" type="text" id="damkarterdekat" value="Langkat (061) 8912110">
+		</font></div>
     </div>
 
     <div id="map"></div>
@@ -187,7 +191,10 @@
 			icon: smicon,
 			tekanan: tekananarun,
 			suhugas: 75,
-			flowrate: flowratearun
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888\nPHE NSB & PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
           }, {
             position: {lat:5.09859, lng:97.138503}, //LBCV 1, no urut 1
 			type: 'lbcv',
@@ -195,7 +202,10 @@
 			icon: lbcvicon,
 			tekanan: tekananarun-10,
 			suhugas: 75,
-			flowrate: flowratearun
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888\nPHE NSB & PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
           }, {
 		    position: {lat:5.0511286, lng:97.2553603}, //LBCV 2, no urut 2
 			type: 'lbcv',
@@ -203,7 +213,10 @@
 			icon: lbcvicon,
 			tekanan: tekananarun-20,
 			suhugas: 75,
-			flowrate: flowratearun
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888\nPHE NSB & PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
           }, {
 			position: {lat:4.9491693, lng:97.3376748}, //LBCV 3, no urut 3
 			type: 'lbcv',
@@ -211,7 +224,10 @@
 			icon: lbcvicon,
 			tekanan: tekananarun-30,
 			suhugas: 75,
-			flowrate: flowratearun
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888\nPHE NSB & PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
           }, {
             position: {lat:4.8682137, lng:97.4479687}, //LBCV 4, no urut 4
 			type: 'lbcv',
@@ -219,7 +235,10 @@
 			icon: lbcvicon,
 			tekanan: tekananarun-40,
 			suhugas: 75,
-			flowrate: flowratearun
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888\nPHE NSB & PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
           }, {
             position: {lat:4.899277, lng:97.554188}, //LBCV 5, no urut 5
 			type: 'lbcv',
@@ -227,7 +246,10 @@
 			icon: lbcvicon,
 			tekanan: tekananarun-50,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Perta Arun Gas 08118021888\nPHE NSB & PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
           }, {
             position: {lat:4.8323902, lng:97.6078731}, //LBCV 6, no urut 6
 			type: 'lbcv',
@@ -235,7 +257,10 @@
 			icon: lbcvicon,
 			tekanan: tekananarun-60,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Rantau 08121075085',
+			rs: 'RSUD SAAS 0646531428',
+			damkar: 'Aceh Timur 085261812113'
           }, {
             position: {lat:4.835706, lng:97.708989}, //LBCV 7, no urut 7
 			type: 'lbcv',
@@ -243,7 +268,10 @@
 			icon: lbcvicon,
 			tekanan: tekananarun-70,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Rantau 08121075085',
+			rs: 'RSUD SAAS 0646531428',
+			damkar: 'Aceh Timur 085261812113'
           }, {	
             position: {lat:4.763970, lng:97.795643}, //SKG RPA, no urut 8
 			type: 'skg',
@@ -251,7 +279,10 @@
 			icon: skgicon,
 			tekanan: tekananrpa,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Rantau 08121075085',
+			rs: 'RSUD SAAS 0646531428',
+			damkar: 'Aceh Timur 085261812113'
           }, {		  
             position: {lat:4.665926, lng:97.837022}, //LBCV 8, no urut 9
             type: 'lbcv',
@@ -259,7 +290,10 @@
 			icon: lbcvicon,
 			tekanan: tekananrpa-10,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Rantau 08121075085',
+			rs: 'RSUD SAAS 0646531428',
+			damkar: 'Aceh Timur 085261812113'
           }, {
             position: {lat:4.578443, lng:97.889069}, //LBCV 9, no urut 10
             type: 'lbcv',
@@ -267,7 +301,10 @@
 			icon: lbcvicon,
 			tekanan: tekananrpa-20,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Rantau 08121075085',
+			rs: 'RSUD Langsa 0641 22051',
+			damkar: 'Aceh Timur 085261812113'
           }, {
             position: {lat:4.4583309, lng:97.9258811}, //LBCV 10, no urut 11
             type: 'lbcv',
@@ -275,7 +312,10 @@
 			icon: lbcvicon,
 			tekanan: tekananrpa-30,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Rantau 08121075085',
+			rs: 'RSUD Langsa 0641 22051',
+			damkar: 'Aceh Timur 085261812113'
           }, {
             position: {lat:4.37855, lng:98.024541}, //LBCV 11, no urut 12
             type: 'lbcv',
@@ -283,7 +323,10 @@
 			icon: lbcvicon,
 			tekanan: tekananrpa-40,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Rantau 08121075085',
+			rs: 'RSUD Langsa 0641 22051',
+			damkar: 'Aceh Timur 085261812113'
           }, {
             position: {lat:4.29723, lng:98.08454}, //LBCV 12, no urut 13
             type: 'lbcv',
@@ -291,7 +334,10 @@
 			icon: lbcvicon,
 			tekanan: tekananrpa-50,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Rantau 08121075085',
+			rs: 'RSUD Aceh Tamiang 0641332983',
+			damkar: 'Aceh Tamiang 064131113'
           }, {
             position: {lat:4.181811, lng:98.043201}, //LBCV 13, no urut 14
             type: 'lbcv',
@@ -299,7 +345,10 @@
 			icon: lbcvicon,
 			tekanan: tekananrpa-60,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Rantau 08121075085',
+			rs: 'RSUD Aceh Tamiang 0641332983',
+			damkar: 'Aceh Tamiang 064131113'
           }, {
             position: {lat:4.06212, lng:98.1121}, //LBCV 14, no urut 15
             type: 'lbcv',
@@ -307,7 +356,10 @@
 			icon: lbcvicon,
 			tekanan: tekananrpa-70,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Susu 08112409607',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
           }, {
             position: {lat:4.03305, lng:98.2082}, //LBCV 15, no urut 16
             type: 'lbcv',
@@ -315,7 +367,10 @@
 			icon: lbcvicon,
 			tekanan: tekananrpa-80,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nPEP Susu 08112409607',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
           }, {
             position: {lat:4.017443, lng:98.275883}, //SKG PBR, no urut 17
             type: 'skg',
@@ -323,7 +378,10 @@
 			icon: skgicon,
 			tekanan: tekananpbr,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
 		  }, {
             position: {lat:3.8941479, lng:98.3220255}, //LBCV 16, no urut 18
             type: 'lbcv',
@@ -331,7 +389,10 @@
 			icon: lbcvicon,
 			tekanan: tekananpbr-10,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
           },{
             position: {lat:3.778708, lng:98.415492}, //LBCV 17, no urut 19
             type: 'lbcv',
@@ -339,7 +400,10 @@
 			icon: lbcvicon,
 			tekanan: tekananpbr-20,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
           },{
             position: {lat:3.7435247, lng:98.4966937}, //LBCV 18, no urut 20
             type: 'lbcv',
@@ -347,7 +411,10 @@
 			icon: lbcvicon,
 			tekanan: tekananpbr-30,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
           },{
             position: {lat:3.743714, lng:98.538554}, //LBCV 19, no urut 21
             type: 'lbcv',
@@ -355,7 +422,10 @@
 			icon: lbcvicon,
 			tekanan: tekananpbr-40,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
           },{		  
             position: {lat:3.773384, lng:98.671206}, //SM Belawan, no urut 22
             type: 'sm',
@@ -363,7 +433,10 @@
 			icon: smicon,
 			tekanan: 320.56,
 			suhugas: 75,
-			flowrate: flowratearun+flowratemedco
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'RS Pelabuhan Belawan 061 641927',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:5.23531, lng:97.03183}, //SM PIM, no urut 23
             type: 'sm',
@@ -371,7 +444,10 @@
 			icon: smicon,
 			tekanan: 623.8,
 			suhugas: 74.9,
-			flowrate: 35.956
+			flowrate: 35.956,
+			erp: 'Perta Arun Gas 08118021888\nPHE NSB & PHE NSO 081311162470',
+			rs: 'RS PIM 085362639504',
+			damkar: 'Lhokseumawe 085105004113'
           },{		  
             position: {lat:5.24512, lng:97.02443}, //SM AAF, no urut 24
             type: 'sm',
@@ -379,7 +455,10 @@
 			icon: smicon,
 			tekanan: 600,
 			suhugas: 76,
-			flowrate: 3.409
+			flowrate: 3.409,
+			erp: 'Perta Arun Gas 08118021888\nPHE NSB & PHE NSO 081311162470',
+			rs: 'RS PIM 085362639504',
+			damkar: 'Lhokseumawe 085105004113'
           },{		  
             position: {lat:5.18879, lng:96.94412}, //SM KKA, no urut 25 
             type: 'sm',
@@ -387,7 +466,10 @@
 			icon: smicon,
 			tekanan: 500,
 			suhugas: 70,
-			flowrate: 3.409
+			flowrate: 3.409,
+			erp: 'Perta Arun Gas 08118021888\nPHE NSB & PHE NSO 081311162470',
+			rs: 'RS PIM 085362639504',
+			damkar: 'Lhokseumawe 085105004113'
           },{		  
             position: {lat:3.758523, lng:98.665659}, //Manifold Belawan Indah, no urut 26
             type: 'mf',
@@ -395,7 +477,10 @@
 			icon: manifoldicon,
 			tekanan: 330,
 			suhugas: 80,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'RS Pelabuhan Belawan 061 641927',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:3.672806, lng:98.680825}, //SM KIM, no urut 27
             type: 'sm',
@@ -403,7 +488,10 @@
 			icon: smicon,
 			tekanan: 320,
 			suhugas: 83,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:3.139201, lng:99.338047}, //SM KEK, no urut 28 
             type: 'sm',
@@ -411,7 +499,10 @@
 			icon: smicon,
 			tekanan: 320,
 			suhugas: 77,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:4.05192, lng:98.242382}, //Manifold Pangkalan Batu, no urut 29 
             type: 'mf',
@@ -419,7 +510,10 @@
 			icon: manifoldicon,
 			tekanan: 110,
 			suhugas: 78,
-			flowrate: 1
+			flowrate: 1,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
           },{		  
             position: {lat:4.018711, lng:98.274915}, //SKG Booster Brandan, no urut 30 
             type: 'skg',
@@ -427,7 +521,10 @@
 			icon: skgicon,
 			tekanan: 309,
 			suhugas: 83.9,
-			flowrate: 9.352
+			flowrate: 9.352,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
           },{		  
             position: {lat:3.663653, lng:98.506827}, //SM Wampu, no urut 31
             type: 'sm',
@@ -435,7 +532,10 @@
 			icon: smicon,
 			tekanan: 222.9,
 			suhugas: 84.1,
-			flowrate: 4.155
+			flowrate: 4.155,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
           },{		  
             position: {lat:3.764218, lng:98.423259}, //MLBV Gohor Lama, no urut 32 
             type: 'lbcv',
@@ -443,7 +543,10 @@
 			icon: lbcvicon,
 			tekanan: 235,
 			suhugas: 80,
-			flowrate: 4.155
+			flowrate: 4.155,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
           },{		  
             position: {lat:3.973649, lng:98.278755}, //MLBV Payamala, no urut 33
             type: 'lbcv',
@@ -451,7 +554,10 @@
 			icon: lbcvicon,
 			tekanan: 193,
 			suhugas: 79,
-			flowrate: 6.1
+			flowrate: 6.1,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
           },{		  
             position: {lat:3.8188, lng:98.391746}, //MLBV Tanjung Beringin, no urut 34
             type: 'lbcv',
@@ -459,7 +565,10 @@
 			icon: lbcvicon,
 			tekanan: 229,
 			suhugas: 81,
-			flowrate: 4.155
+			flowrate: 4.155,
+			erp: 'Pertamina Gas NSA 08128789263\nRU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
           },{		  
             position: {lat:3.722924, lng:98.682823}, //LBCV 20, no urut 35 
             type: 'lbcv',
@@ -467,7 +576,10 @@
 			icon: lbcvicon,
 			tekanan: 310,
 			suhugas: 79,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:3.547669, lng:98.725248}, //LBCV 21, no urut 36
             type: 'lbcv',
@@ -475,7 +587,10 @@
 			icon: lbcvicon,
 			tekanan: 296,
 			suhugas: 78,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:3.539314, lng:98.838722}, //LBCV 22, no urut 37
             type: 'lbcv',
@@ -483,7 +598,10 @@
 			icon: lbcvicon,
 			tekanan: 271,
 			suhugas: 80,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:3.545442, lng:98.968988}, //LBCV 23, no urut 38
             type: 'lbcv',
@@ -491,7 +609,10 @@
 			icon: lbcvicon,
 			tekanan: 252,
 			suhugas: 81,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:3.5225402, lng:99.0973078}, //LBCV 24, no urut 39
             type: 'lbcv',
@@ -499,7 +620,10 @@
 			icon: lbcvicon,
 			tekanan: 236,
 			suhugas: 79,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:3.4149785, lng:99.1803731}, //LBCV 25, no urut 40
             type: 'lbcv',
@@ -507,7 +631,10 @@
 			icon: lbcvicon,
 			tekanan: 230,
 			suhugas: 80,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:3.3329127, lng:99.2908137}, //LBCV 26, no urut 41
             type: 'lbcv',
@@ -515,7 +642,10 @@
 			icon: lbcvicon,
 			tekanan: 224,
 			suhugas: 80,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
           },{		  
             position: {lat:3.206948, lng:99.293718}, //LBCV 27, no urut 42
             type: 'lbcv',
@@ -523,7 +653,10 @@
 			icon: lbcvicon,
 			tekanan: 210,
 			suhugas: 82,
-			flowrate: 0.699
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
           }   
         ];
 		
@@ -553,19 +686,26 @@ function animateMapZoomTo(map, targetZoom) {
 	flowrate.value=detillokasi(pilihan)[2];
 	lintang.value=detillokasi(pilihan)[3];
 	bujur.value=detillokasi(pilihan)[4];
+	erpterdekat.value=detillokasi(pilihan)[5];
+	//document.getElementsByName("erpterdekat").innerHTML=detillokasi(pilihan)[5];
+	rsterdekat.value=detillokasi(pilihan)[6];
+	damkarterdekat.value=detillokasi(pilihan)[7];
 	aqi(); namalokasi("namadaerah",lintang.value,bujur.value);
 }
 
 		function detillokasi(nourut){	
-		var tekanan,suhugas,flowrate,lintang,bujur;
+		var tekanan,suhugas,flowrate,lintang,bujur,erpterdekat,rsterdekat,damkarterdekat;
 			tekanan=senarailokasi[nourut].tekanan;
 			suhugas=senarailokasi[nourut].suhugas;
 			flowrate=senarailokasi[nourut].flowrate;
 			lintang=senarailokasi[nourut].position.lat;
 			bujur=senarailokasi[nourut].position.lng;
+			erpterdekat=senarailokasi[nourut].erp;
+			rsterdekat=senarailokasi[nourut].rs;
+			damkarterdekat=senarailokasi[nourut].damkar;
 		mn = new google.maps.LatLng(lintang,bujur);
 		marker1.setPosition(mn);
-		return [tekanan,suhugas,flowrate,lintang,bujur];
+		return [tekanan,suhugas,flowrate,lintang,bujur,erpterdekat,rsterdekat,damkarterdekat];
 		}
 			
 	//tarik data openweather API
