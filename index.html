@@ -33,7 +33,7 @@
         right: 0%;
         padding: 0px;
         position: absolute;
-        bottom: -46%;
+        bottom: -47%;
 		visibility: hidden;
       }
 	  #tampilanawal {
@@ -791,6 +791,7 @@ function animateMapZoomTo(map, targetZoom) {
 		document.getElementById("hasilsimulasi").style.visibility = "visible";
 		animateMapZoomTo(map,17);
 		map.setCenter(marker1.getPosition());
+		document.getElementById("hasilsimulasi").style.visibility = "hidden";
 	});
 
 	document.getElementById("pilihlokasikejadian").addEventListener("change", function(){
