@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Online Monitoring Duren Medan</title>
+    <style>
+      #map {
+        height: 100%; //100% tinggi
+      }
+	  input {
+	  font-size:10px;
+	  }
+	  select {
+	  font-size:10px;
+	  }
+      html, body {
+        height: 100%; 
+        margin: 0;
+        padding: 0; //100% tinggi, tanpa margin, tanpa geser padding
+      }
+      #floating-panel {
+        background-color: #fff;
+        border: 1px solid #999;
+        right: 0%;
+        padding: 0px;
+        position: absolute;
+        top: 30px;
+        z-index: 1;
+      }
+	  #hasilsimulasi {
+        background-color: #fff;
+        border: 1px solid #999;
+        right: 0%;
+        padding: 0px;
+        position: absolute;
+        bottom: -220px;
+		visibility: hidden;
+      }
+	  #tampilanawal {
+        right: 0%;
+        padding: 0px;
+        position: absolute;
+        top: 23px;
+      }
+      #show-panel {
+        right: 0%;
+        padding: 0px;
+        position: absolute;
+        top: 0%;
+		visibility: hidden;
+		z-index: 1;
+      }
+	  #hide-panel {
+        right: 0%;
+        padding: 0px;
+        position: absolute;
+        top: 0%;
+		z-index: 1;
+      }
+	    table {border-collapse:collapse; width:10px;}
+		table td {border:solid 1px #fab; width:10px; word-wrap:break-word;}
+    </style>
+  </head>
+  <body onload="waktu()">
+	<div id="hide-panel" align="right">
+	<img width=30px height=30px title="Sembunyikan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/sembunyikan.png onclick="toggleFloatingPanel()"/><a id="tautan" href="https://api.whatsapp.com/send?phone=628126038000&text=*https://durenmedan.uk*%0A%0A*Laporan*%20*Kejadian*%20*Kebakaran%20:*%0AJl.%20Balongan,%20Puraka%20-%20I,%20Sei%20Lepan,%20Kabupaten%20Langkat,%20Sumatera%20Utara%2020881,%20Indonesia%0A%0A4.017443%20Lintang%20Utara,%2098.275883%20Bujur%20Barat%0A%0Ahttps://maps.google.com/?q=4.017443,98.275883%0A%0A*ERP*%20*Sumbagut*%20*terdekat*%20*:*%0APertamina%20Gas%20NSA%2008128789263%0A%0ARU%20II%20Brandan%20081376120930%0A%0A*RS*%20*terdekat*%20*:*%0ARSPPB%20(0620)%203224530%0A%0A*Damkar*%20*terdekat*%20*:*%0ALangkat%20(061)%208912110" target="_blank"><img width=30px height=30px id="whatsapp" title="Laporkan Kejadian Kebakaran" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/WhatsApp.png></a><img width=30px height=30px id="lokasisaya" title="Lokasi Saya" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/lokasisaya.png><img width=30px height=30px title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br></br>
+	</div>
+	<div id="show-panel" align="right">
+		<img width=30px height=30px title="Tampilkan Panel" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilkan.png onclick="toggleFloatingPanel()"/><a id="tautan" href="https://api.whatsapp.com/send?phone=628126038000&text=*https://durenmedan.uk*%0A%0A*Laporan*%20*Kejadian*%20*Kebakaran%20:*%0AJl.%20Balongan,%20Puraka%20-%20I,%20Sei%20Lepan,%20Kabupaten%20Langkat,%20Sumatera%20Utara%2020881,%20Indonesia%0A%0A4.017443%20Lintang%20Utara,%2098.275883%20Bujur%20Barat%0A%0Ahttps://maps.google.com/?q=4.017443,98.275883%0A%0A*ERP*%20*Sumbagut*%20*terdekat*%20*:*%0APertamina%20Gas%20NSA%2008128789263%0A%0ARU%20II%20Brandan%20081376120930%0A%0A*RS*%20*terdekat*%20*:*%0ARSPPB%20(0620)%203224530%0A%0A*Damkar*%20*terdekat*%20*:*%0ALangkat%20(061)%208912110" target="_blank"><img width=30px height=30px id="whatsapp" title="Laporkan Kejadian Kebakaran" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/WhatsApp.png></a><img width=30px height=30px id="lokasisaya" title="Lokasi Saya" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/lokasisaya.png><img width=30px height=30px title="Tampilan Awal" src=https://raw.githubusercontent.com/durenmedan/durenmedan/master/tampilanawal.png onclick="initMap()"/></br></br>
+	</div>
+	<div id="tampilanawal">
+	</div>
+    <div id="floating-panel"> 
+	  <span style="background-color: #000000;color: #FFFFFF"><b>Panel Kendali</b></span></br>
+	  	<div id="waktu"></div>
+		<b><font size="2">Posisi Kejadian Kebakaran</font><div id="masukkan"></b>
+	  	<font size="2">Pilih Lokasi 
+		<select id="pilihlokasikejadian" name="pilihlokasi" onChange="sesuaikan(this.value)">
+			<option disabled style="font-weight:bold;background-color:#FFFF00;"><b>Ruas Arun-Belawan</b></option>
+			<option value="0">SM Arun</option>
+			<option value="1">LBCV 1</option>
+			<option value="2">LBCV 2</option>
+			<option value="3">LBCV 3</option>
+			<option value="4">LBCV 4</option>
+			<option value="5">LBCV 5</option>
+			<option value="6">LBCV 6</option>
+			<option value="7">LBCV 7</option>
+			<option value="8">SKG Rantau Panjang</option>
+			<option value="9">LBCV 8</option>
+			<option value="10">LBCV 9</option>
+			<option value="11">LBCV 10</option>
+			<option value="12">LBCV 11</option>
+			<option value="13">LBCV 12</option>
+			<option value="14">LBCV 13</option>
+			<option value="15">LBCV 14</option>
+			<option value="16">LBCV 15</option>
+			<option value="17" selected="selected">SKG Pangkalan Brandan</option>
+			<option value="18">LBCV 16</option>
+			<option value="19">LBCV 17</option>
+			<option value="20">LBCV 18</option>
+			<option value="21">LBCV 19</option>
+			<option value="22">SM Belawan</option>
+			<option disabled style="font-weight:bold;background-color:#FFFF00;"><b>Ruas Point B-KKA</b></option>
+			<option value="0">SM Arun/Point B</option>
+			<option value="23">SM PIM</option>
+			<option value="24">SM AAF</option>
+			<option value="25">SM KKA</option>
+			<option disabled style="font-weight:bold;background-color:#FFFF00;"><b>Ruas Batu-Brandan-Wampu</b></option>
+			<option value="29">Manifold Pangkalan Batu</option>
+			<option value="33">MLBV Payamala</option>
+			<option value="30">SKG Booster Brandan</option>
+			<option value="34">MLBV Tanjung Beringin</option>
+			<option value="32">MLBV Gohor Lama</option>
+			<option value="31">SM Wampu</option>
+			<option disabled style="font-weight:bold;background-color:#FFFF00;">Ruas Belawan-KIM-KEK</option>
+			<option value="26">Manifold Belawan Indah</option>
+			<option value="35">LBCV 20</option>	
+			<option value="27">SM KIM</option>			
+			<option value="36">LBCV 21</option>	
+			<option value="37">LBCV 22</option>
+			<option value="38">LBCV 23</option>
+			<option value="39">LBCV 24</option>
+			<option value="40">LBCV 25</option>
+			<option value="41">LBCV 26</option>
+			<option value="42">LBCV 27</option>
+			<option value="28">SM KEK</option>				
+		</font></select></br>
+	  <div id="namadaerah"></div></div>
+	  <font size="2"><input type="text" id="lintang" value="4.017443" size="5"> Lintang Utara,</font><font size="2"><input type="text" id="bujur" value="98.275883" size="5"> Bujur Barat</font><hr>
+	  <b><font size="2">Kondisi Lingkungan</font></b><input type="hidden" id="namalokasidetil" value="">
+	  <table style="width:239px"><th style="width:200px">
+	  <font size="2">Air Quality Index <input type="text" id="aqiindex" size="1"></input> US AQI</font></br>
+	  <font size="2">Kecepatan Angin <input type="text" id="kecepatanangin" value=" " size="4"> m/s</font></br>
+	  <font size="2">Sudut Sumber Angin <input type="text" id="arahangin" value=" " size="1"> °</font></br>
+	  <font size="2">Kelembapan <input type="text" id="kelembapan" value=" " size="1"> %</font></br>
+	  <font size="2">Suhu Udara <input type="text" id="suhuudara" value=" " size="1"> °C</font></br>
+	  <font size="2">Cuaca <input type="text" id="cuaca" value=" " size="10"></th><th><img id="awan" src="" width="30"></th></font></table>
+	  <hr>
+	  <font size="2"><b>Data Penyaluran</b></br>
+	  Tekanan : <input type="text" id="tekanan" value="432.65" size="3"> psig</br>
+	  Suhu Gas : <input type="text" id="suhugas" value="75" size="1"> °F</br>
+	  Flowrate : <input type="text" id="flowrate" value="135.416" size="4"> MMSCFD
+	  <center><button id="simulasikan">Simulasikan</button><button id="bersihkan">Bersihkan</button></center></font>
+	  <div id="hasilsimulasi">
+		<font size="2"><table style="width:239px">
+		<tr>
+			<th style="width:30%">Zona</th>
+			<th>Bahaya</th>
+		</tr>
+		<tr>
+			<td bgcolor="red"><center>Merah</br><font size="1">q&#62;10kW/m²</font></center></td>
+			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonamerah" value="152"> m, berpotensi korban jiwa dalam 60 detik</td>
+		</tr>
+		<tr>
+			<td bgcolor="orange"><center>Oranye</br><font size="1">5kW/m²&#60;q&#60;10kW/m²</font></center></td>
+			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonaoranye" value="216" size="1"> m, luka bakar parah dalam 60 detik</td>
+		</tr>
+		<tr>
+			<td bgcolor="yellow"><center>Kuning</br><font size="1">2kW/m²&#60;q&#60;5kW/m²</font></center></td>
+			<td>R = <input style="width:3ch;border:none;" type="text" id="rzonakuning" value="336" size="1"> m, luka bakar dalam 60 detik</td>
+		</tr>
+		</table>
+		ERP terdekat : <textarea maxlength="80" rows="2" rows="100" style="width:239px;border:none;overflow:hidden;resize:none;font-size:10px" id="erpterdekat" name="erpterdekat">Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930</textarea></br>
+		RS terdekat : <input style="border:none;" type="text" id="rsterdekat" value="RSPPB (0620) 322455"></br>
+		Damkar terdekat : <input style="border:none;" type="text" id="damkarterdekat" value="Langkat (061) 8912110">
+		</font></div>
+    </div>
+
+    <div id="map"></div>
+    <script>
+
+	//senarai konstanta parameter
+	var zonamerah, zonaoranye, zonakuning;
+	var flowratearun = 88.102;
+	var flowratemedco = 47.314;
+	var tekananarun = 661.44;
+	var tekananrpa = 566.6;
+	var tekananpbr = 432.65;
+	//pengaturan icon simbol
+	var lbcvicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/lbcvicon.png';
+	var manifoldicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/manifoldicon.png';
+	var manualicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/manual.png';
+	var smicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/smicon.png';
+	var skgicon = 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/skgicon.png';
+	//konstanta lokasi
+	var senarailokasi = [
+          {
+            position: {lat:5.221634, lng:97.077584}, //SM Arun, no urut 0
+            type: 'sm',
+			title: 'SM Arun',
+			icon: smicon,
+			tekanan: tekananarun,
+			suhugas: 75,
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888 dan PHE NSB dan PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
+          }, {
+            position: {lat:5.09859, lng:97.138503}, //LBCV 1, no urut 1
+			type: 'lbcv',
+			title: 'LBCV 1 - KP015',
+			icon: lbcvicon,
+			tekanan: tekananarun-10,
+			suhugas: 75,
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888 dan PHE NSB dan PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
+          }, {
+		    position: {lat:5.0511286, lng:97.2553603}, //LBCV 2, no urut 2
+			type: 'lbcv',
+			title: 'LBCV 2 - KP032',
+			icon: lbcvicon,
+			tekanan: tekananarun-20,
+			suhugas: 75,
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888 dan PHE NSB dan PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
+          }, {
+			position: {lat:4.9491693, lng:97.3376748}, //LBCV 3, no urut 3
+			type: 'lbcv',
+			title: 'LBCV 3 - KP048',
+			icon: lbcvicon,
+			tekanan: tekananarun-30,
+			suhugas: 75,
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888 dan PHE NSB dan PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
+          }, {
+            position: {lat:4.8682137, lng:97.4479687}, //LBCV 4, no urut 4
+			type: 'lbcv',
+			title: 'LBCV 4 - KP064',
+			icon: lbcvicon,
+			tekanan: tekananarun-40,
+			suhugas: 75,
+			flowrate: flowratearun,
+			erp: 'Perta Arun Gas 08118021888 dan PHE NSB dan PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
+          }, {
+            position: {lat:4.899277, lng:97.554188}, //LBCV 5, no urut 5
+			type: 'lbcv',
+			title: 'LBCV 5 - KP081',
+			icon: lbcvicon,
+			tekanan: tekananarun-50,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Perta Arun Gas 08118021888 dan PHE NSB dan PHE NSO 081311162470',
+			rs: 'RS Arun (0645) 653165',
+			damkar: 'Lhokseumawe 085105004113'
+          }, {
+            position: {lat:4.8323902, lng:97.6078731}, //LBCV 6, no urut 6
+			type: 'lbcv',
+			title: 'LBCV 6 - KP097',
+			icon: lbcvicon,
+			tekanan: tekananarun-60,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Rantau 08121075085',
+			rs: 'RSUD SAAS 0646531428',
+			damkar: 'Aceh Timur 085261812113'
+          }, {
+            position: {lat:4.835706, lng:97.708989}, //LBCV 7, no urut 7
+			type: 'lbcv',
+			title: 'LBCV 7 - KP113',
+			icon: lbcvicon,
+			tekanan: tekananarun-70,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Rantau 08121075085',
+			rs: 'RSUD SAAS 0646531428',
+			damkar: 'Aceh Timur 085261812113'
+          }, {	
+            position: {lat:4.763970, lng:97.795643}, //SKG RPA, no urut 8
+			type: 'skg',
+			title: 'SKG Rantau Panjang - KP128',
+			icon: skgicon,
+			tekanan: tekananrpa,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Rantau 08121075085',
+			rs: 'RSUD SAAS 0646531428',
+			damkar: 'Aceh Timur 085261812113'
+          }, {		  
+            position: {lat:4.665926, lng:97.837022}, //LBCV 8, no urut 9
+            type: 'lbcv',
+			title: 'LBCV 8 - KP144',
+			icon: lbcvicon,
+			tekanan: tekananrpa-10,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Rantau 08121075085',
+			rs: 'RSUD SAAS 0646531428',
+			damkar: 'Aceh Timur 085261812113'
+          }, {
+            position: {lat:4.578443, lng:97.889069}, //LBCV 9, no urut 10
+            type: 'lbcv',
+			title: 'LBCV 9 - KP157',
+			icon: lbcvicon,
+			tekanan: tekananrpa-20,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Rantau 08121075085',
+			rs: 'RSUD Langsa 0641 22051',
+			damkar: 'Aceh Timur 085261812113'
+          }, {
+            position: {lat:4.4583309, lng:97.9258811}, //LBCV 10, no urut 11
+            type: 'lbcv',
+			title: 'LBCV 10 - KP174',
+			icon: lbcvicon,
+			tekanan: tekananrpa-30,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Rantau 08121075085',
+			rs: 'RSUD Langsa 0641 22051',
+			damkar: 'Aceh Timur 085261812113'
+          }, {
+            position: {lat:4.37855, lng:98.024541}, //LBCV 11, no urut 12
+            type: 'lbcv',
+			title: 'LBCV 11 - KP192',
+			icon: lbcvicon,
+			tekanan: tekananrpa-40,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Rantau 08121075085',
+			rs: 'RSUD Langsa 0641 22051',
+			damkar: 'Aceh Timur 085261812113'
+          }, {
+            position: {lat:4.29723, lng:98.08454}, //LBCV 12, no urut 13
+            type: 'lbcv',
+			title: 'LBCV 12 - KP208',
+			icon: lbcvicon,
+			tekanan: tekananrpa-50,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Rantau 08121075085',
+			rs: 'RSUD Aceh Tamiang 0641332983',
+			damkar: 'Aceh Tamiang 064131113'
+          }, {
+            position: {lat:4.181811, lng:98.043201}, //LBCV 13, no urut 14
+            type: 'lbcv',
+			title: 'LBCV 13 - KP224',
+			icon: lbcvicon,
+			tekanan: tekananrpa-60,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Rantau 08121075085',
+			rs: 'RSUD Aceh Tamiang 0641332983',
+			damkar: 'Aceh Tamiang 064131113'
+          }, {
+            position: {lat:4.06212, lng:98.1121}, //LBCV 14, no urut 15
+            type: 'lbcv',
+			title: 'LBCV 14 - KP240',
+			icon: lbcvicon,
+			tekanan: tekananrpa-70,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Susu 08112409607',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
+          }, {
+            position: {lat:4.03305, lng:98.2082}, //LBCV 15, no urut 16
+            type: 'lbcv',
+			title: 'LBCV 15 - KP255',
+			icon: lbcvicon,
+			tekanan: tekananrpa-80,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan PEP Susu 08112409607',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
+          }, {
+            position: {lat:4.017443, lng:98.275883}, //SKG PBR, no urut 17
+            type: 'skg',
+			title: 'SKG Pangkalan Brandan - KP266',
+			icon: skgicon,
+			tekanan: tekananpbr,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
+		  }, {
+            position: {lat:3.8941479, lng:98.3220255}, //LBCV 16, no urut 18
+            type: 'lbcv',
+			title: 'LBCV 16 - KP282',
+			icon: lbcvicon,
+			tekanan: tekananpbr-10,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
+          },{
+            position: {lat:3.778708, lng:98.415492}, //LBCV 17, no urut 19
+            type: 'lbcv',
+			title: 'LBCV 17 - KP299',
+			icon: lbcvicon,
+			tekanan: tekananpbr-20,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
+          },{
+            position: {lat:3.7435247, lng:98.4966937}, //LBCV 18, no urut 20
+            type: 'lbcv',
+			title: 'LBCV 18 - KP314',
+			icon: lbcvicon,
+			tekanan: tekananpbr-30,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
+          },{
+            position: {lat:3.743714, lng:98.538554}, //LBCV 19, no urut 21
+            type: 'lbcv',
+			title: 'LBCV 19 - KP319',
+			icon: lbcvicon,
+			tekanan: tekananpbr-40,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
+          },{		  
+            position: {lat:3.773384, lng:98.671206}, //SM Belawan, no urut 22
+            type: 'sm',
+			title: 'SM Belawan - KP334',
+			icon: smicon,
+			tekanan: 320.56,
+			suhugas: 75,
+			flowrate: flowratearun+flowratemedco,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'RS Pelabuhan Belawan 061 641927',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:5.23531, lng:97.03183}, //SM PIM, no urut 23
+            type: 'sm',
+			title: 'SM Pupuk Iskandar Muda (PIM)',
+			icon: smicon,
+			tekanan: 623.8,
+			suhugas: 74.9,
+			flowrate: 35.956,
+			erp: 'Perta Arun Gas 08118021888 dan PHE NSB dan PHE NSO 081311162470',
+			rs: 'RS PIM 085362639504',
+			damkar: 'Lhokseumawe 085105004113'
+          },{		  
+            position: {lat:5.24512, lng:97.02443}, //SM AAF, no urut 24
+            type: 'sm',
+			title: 'SM Asean Aceh Fertilizer (AAF)',
+			icon: smicon,
+			tekanan: 600,
+			suhugas: 76,
+			flowrate: 3.409,
+			erp: 'Perta Arun Gas 08118021888 dan PHE NSB dan PHE NSO 081311162470',
+			rs: 'RS PIM 085362639504',
+			damkar: 'Lhokseumawe 085105004113'
+          },{		  
+            position: {lat:5.18879, lng:96.94412}, //SM KKA, no urut 25 
+            type: 'sm',
+			title: 'SM Kertas Kraft Aceh (KKA)',
+			icon: smicon,
+			tekanan: 500,
+			suhugas: 70,
+			flowrate: 3.409,
+			erp: 'Perta Arun Gas 08118021888 dan PHE NSB dan PHE NSO 081311162470',
+			rs: 'RS PIM 085362639504',
+			damkar: 'Lhokseumawe 085105004113'
+          },{		  
+            position: {lat:3.758523, lng:98.665659}, //Manifold Belawan Indah, no urut 26
+            type: 'mf',
+			title: 'Manifold Belawan indah',
+			icon: manifoldicon,
+			tekanan: 330,
+			suhugas: 80,
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'RS Pelabuhan Belawan 061 641927',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:3.672806, lng:98.680825}, //SM KIM, no urut 27
+            type: 'sm',
+			title: 'SM Kawasan Industri Medan (KIM)',
+			icon: smicon,
+			tekanan: 320,
+			suhugas: 83,
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:3.139201, lng:99.338047}, //SM KEK, no urut 28 
+            type: 'sm',
+			title: 'SM Kawasan Ekonomi Khusus (KEK) Simalungun',
+			icon: smicon,
+			tekanan: 320,
+			suhugas: 77,
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:4.05192, lng:98.242382}, //Manifold Pangkalan Batu, no urut 29 
+            type: 'mf',
+			title: 'Manifold Pangkalan Batu',
+			icon: manifoldicon,
+			tekanan: 110,
+			suhugas: 78,
+			flowrate: 1,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
+          },{		  
+            position: {lat:4.018711, lng:98.274915}, //SKG Booster Brandan, no urut 30 
+            type: 'skg',
+			title: 'SKG Booster Brandan',
+			icon: skgicon,
+			tekanan: 309,
+			suhugas: 83.9,
+			flowrate: 9.352,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
+          },{		  
+            position: {lat:3.663653, lng:98.506827}, //SM Wampu, no urut 31
+            type: 'sm',
+			title: 'SM Wampu',
+			icon: smicon,
+			tekanan: 222.9,
+			suhugas: 84.1,
+			flowrate: 4.155,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
+          },{		  
+            position: {lat:3.764218, lng:98.423259}, //MLBV Gohor Lama, no urut 32 
+            type: 'lbcv',
+			title: 'MLBV Gohor Lama',
+			icon: lbcvicon,
+			tekanan: 235,
+			suhugas: 80,
+			flowrate: 4.155,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
+          },{		  
+            position: {lat:3.973649, lng:98.278755}, //MLBV Payamala, no urut 33
+            type: 'lbcv',
+			title: 'MLBV Payamala',
+			icon: lbcvicon,
+			tekanan: 193,
+			suhugas: 79,
+			flowrate: 6.1,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RSPPB (0620) 322455',
+			damkar: 'Langkat (061) 8912110'
+          },{		  
+            position: {lat:3.8188, lng:98.391746}, //MLBV Tanjung Beringin, no urut 34
+            type: 'lbcv',
+			title: 'MLBV Tanjung Beringin',
+			icon: lbcvicon,
+			tekanan: 229,
+			suhugas: 81,
+			flowrate: 4.155,
+			erp: 'Pertamina Gas NSA 08128789263 dan RU II Brandan 081376120930',
+			rs: 'RS Bidadari (061) 8830003',
+			damkar: 'Binjai ‎(061) 8837350'
+          },{		  
+            position: {lat:3.722924, lng:98.682823}, //LBCV 20, no urut 35 
+            type: 'lbcv',
+			title: 'LBCV 20 - KP006.2',
+			icon: lbcvicon,
+			tekanan: 310,
+			suhugas: 79,
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:3.547669, lng:98.725248}, //LBCV 21, no urut 36
+            type: 'lbcv',
+			title: 'LBCV 21 - KP016',
+			icon: lbcvicon,
+			tekanan: 296,
+			suhugas: 78,
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:3.539314, lng:98.838722}, //LBCV 22, no urut 37
+            type: 'lbcv',
+			title: 'LBCV 22 - KP032',
+			icon: lbcvicon,
+			tekanan: 271,
+			suhugas: 80,
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:3.545442, lng:98.968988}, //LBCV 23, no urut 38
+            type: 'lbcv',
+			title: 'LBCV 23 - KP048',
+			icon: lbcvicon,
+			tekanan: 252,
+			suhugas: 81,
+			flowrate: 0.699,
+			erp: 'Pertamina MOR 1 0811973077',
+			rs: 'UPT KIM Medan 06180031789',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:3.5225402, lng:99.0973078}, //LBCV 24, no urut 39
+            type: 'lbcv',
+			title: 'LBCV 24 - KP064',
+			icon: lbcvicon,
+			tekanan: 236,
+			suhugas: 79,
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:3.4149785, lng:99.1803731}, //LBCV 25, no urut 40
+            type: 'lbcv',
+			title: 'LBCV 25 - KP081',
+			icon: lbcvicon,
+			tekanan: 230,
+			suhugas: 80,
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:3.3329127, lng:99.2908137}, //LBCV 26, no urut 41
+            type: 'lbcv',
+			title: 'LBCV 26 - KP097',
+			icon: lbcvicon,
+			tekanan: 224,
+			suhugas: 80,
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
+          },{		  
+            position: {lat:3.206948, lng:99.293718}, //LBCV 27, no urut 42
+            type: 'lbcv',
+			title: 'LBCV 27 - KP113',
+			icon: lbcvicon,
+			tekanan: 210,
+			suhugas: 82,
+			flowrate: 0.699,
+			erp: 'PGE Sibayak 08122075980',
+			rs: 'RSUD Perdagangan (0622) 7076032',
+			damkar: 'Medan 061 4515356'
+          }   
+        ];
+		
+function animateMapZoomTo(map, targetZoom) {
+    var currentZoom = arguments[2] || map.getZoom();
+    if (currentZoom != targetZoom) {
+        google.maps.event.addListenerOnce(map, 'zoom_changed', function (event) {
+            animateMapZoomTo(map, targetZoom, currentZoom + (targetZoom > currentZoom ? 1 : -1));
+        });
+        setTimeout(function(){ map.setZoom(currentZoom) }, 300);
+    }
+}
+
+	function cariterdekat(lat,lng){
+	var nilai=100;
+	var min;
+	for(var i = 0; i < 24; i++){
+		var jarakkuadrat = Math.pow((detillokasi(i)[3]-lat),2)+Math.pow((detillokasi(i)[4]-lng),2);
+		if (jarakkuadrat < nilai) {nilai = jarakkuadrat; min = i;}
+		else{}
+	}
+	return min;
+	}
+	function sesuaikan(pilihan) {
+	tekanan.value=detillokasi(pilihan)[0];//detillokasi(nomorlokasi(pilihan))[0];
+	suhugas.value=detillokasi(pilihan)[1];
+	flowrate.value=detillokasi(pilihan)[2];
+	lintang.value=detillokasi(pilihan)[3];
+	bujur.value=detillokasi(pilihan)[4];
+	erpterdekat.value=detillokasi(pilihan)[5];
+	//document.getElementsByName("erpterdekat").innerHTML=detillokasi(pilihan)[5];
+	rsterdekat.value=detillokasi(pilihan)[6];
+	damkarterdekat.value=detillokasi(pilihan)[7];
+	aqi(); namalokasi("namadaerah",lintang.value,bujur.value);
+}
+
+		function detillokasi(nourut){	
+		var tekanan,suhugas,flowrate,lintang,bujur,erpterdekat,rsterdekat,damkarterdekat;
+			tekanan=senarailokasi[nourut].tekanan;
+			suhugas=senarailokasi[nourut].suhugas;
+			flowrate=senarailokasi[nourut].flowrate;
+			lintang=senarailokasi[nourut].position.lat;
+			bujur=senarailokasi[nourut].position.lng;
+			erpterdekat=senarailokasi[nourut].erp;
+			rsterdekat=senarailokasi[nourut].rs;
+			damkarterdekat=senarailokasi[nourut].damkar;
+		mn = new google.maps.LatLng(lintang,bujur);
+		marker1.setPosition(mn);
+		return [tekanan,suhugas,flowrate,lintang,bujur,erpterdekat,rsterdekat,damkarterdekat];
+		}
+			
+	//tarik data openweather API
+	//fungsiwaktu
+       function initMap() {
+	   aqi(); namalokasi("namadaerah",lintang.value,bujur.value);
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 18, disableDefaultUI: false,
+          center: {lat: 4.017443, lng: 98.275883}, //lokasi awal SKG PBR
+          mapTypeId: 'hybrid',  //citra satelit disertai batas, nama tempat, dll
+		  zoomControl: true,
+		  zoomControlOptions: {
+              position: google.maps.ControlPosition.LEFT_TOP
+          },		  
+          fullscreenControl: true,
+		  fullscreenControlOptions: {
+              position: google.maps.ControlPosition.LEFT_TOP
+          },		  
+		  mapTypeControl: true,
+          mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+            mapTypeIds: ['roadmap', 'terrain', 'satellite', 'hybrid']
+	      },
+		  streetViewControl: true,
+		  streetViewControlOptions: {
+              position: google.maps.ControlPosition.LEFT_TOP
+          }
+        });
+		  
+		//membuat penanda senarai lokasi
+        senarailokasi.forEach(function(feature) {
+          var markercoba = new google.maps.Marker({
+            position: feature.position,
+            icon: feature.icon,
+            map: map,
+			zIndex: 2,
+			title: feature.title
+          });
+        });
+
+        marker1 = new google.maps.Marker({
+          map: map,
+		  icon: manualicon,
+		  zIndex: 1,
+          draggable: true,
+          animation: google.maps.Animation.DROP,
+          position: {lat: 4.017443 , lng: 98.275883}//default SKG PBR
+        });
+        marker1.addListener('click', toggleBounce); //animasi mantul
+		var jendela = new google.maps.InfoWindow;
+		marker1.addListener('dragend', function(event){
+		jendela.setPosition(marker1.position);
+		namalokasi("penanda",marker1.position.lat(),marker1.position.lng());
+		jendela.setContent('<div style="word-wrap: break-word; width: 239px"><div id="penanda"></div>'+marker1.position.lat()+' Lintang Utara</br>'+marker1.position.lng()+' Bujur Barat');
+		jendela.open(map,marker1);
+		});
+
+	document.getElementById("simulasikan").addEventListener("click", function(){
+		rzonamerah.value = parseInt(kecepatanangin.value - suhuudara.value/4.7 - 0.06*kelembapan.value + 0.04*tekanan.value - suhugas.value/22 + 43); 
+		rzonaoranye.value = parseInt(kecepatanangin.value - suhuudara.value/4.2 - 0.06*kelembapan.value + 0.04*tekanan.value - suhugas.value/14.5 + 87); 
+		rzonakuning.value = parseInt(kecepatanangin.value - suhuudara.value/2.9 - 0.06*kelembapan.value + 0.1*tekanan.value - suhugas.value/8.7 + 104); 
+		zonakuning.set('radius', parseFloat(rzonakuning.value));
+		zonakuning.set('center', marker1.position);
+		zonaoranye.set('radius', parseFloat(rzonaoranye.value));
+		zonaoranye.set('center', marker1.position);
+		zonamerah.set('radius', parseFloat(rzonamerah.value));
+		zonamerah.set('center', marker1.position);
+		document.getElementById("hasilsimulasi").style.visibility = "visible";
+		animateMapZoomTo(map,17);
+		map.setCenter(marker1.getPosition());
+	});
+	
+	document.getElementById("bersihkan").addEventListener("click", function(){
+		rzonamerah.value = 0;
+		rzonaoranye.value = 0;
+		rzonakuning.value = 0;
+		zonakuning.set('radius', 0);
+		zonakuning.set('center', marker1.position);
+		zonaoranye.set('radius', 0);
+		zonaoranye.set('center', marker1.position);
+		zonamerah.set('radius', 0);
+		zonamerah.set('center', marker1.position);
+		document.getElementById("hasilsimulasi").style.visibility = "visible";
+		animateMapZoomTo(map,17);
+		map.setCenter(marker1.getPosition());
+		document.getElementById("hasilsimulasi").style.visibility = "hidden";
+	});
+
+	document.getElementById("pilihlokasikejadian").addEventListener("change", function(){
+		animateMapZoomTo(map,8);
+		map.setCenter(marker1.getPosition());
+	});
+	var infoWindow = new google.maps.InfoWindow;
+	document.getElementById("lokasisaya").addEventListener("click", function(){
+		lokasisaya(infoWindow,map);
+	});
+//lingkaran potensi dampak
+		var zonamerah = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.5,
+            map: map, 
+            center: {lat: 4.017443, lng: 98.275883},
+			zIndex: 3,
+            radius: 0
+          });
+		var zonaoranye = new google.maps.Circle({
+            strokeColor: '#FF9900',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF9900',
+            fillOpacity: 0.5,
+            map: map,
+            center: {lat: 4.017443, lng: 98.275883},
+			zIndex: 2,
+            radius: 0
+          });
+		var zonakuning = new google.maps.Circle({
+            strokeColor: '#FFFF00',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FFFF00',
+            fillOpacity: 0.5,
+            map: map,
+            center: {lat: 4.017443, lng: 98.275883},
+			zIndex: 1,
+            radius: 0
+          });
+
+		//external KML url
+		var ctaLayer = new google.maps.KmlLayer({
+          url: 'https://raw.githubusercontent.com/durenmedan/durenmedan/master/ctaq.kml',
+          map: map
+        });
+      }
+	  
+	  function lintangbujur(lintang,bujur){
+	  lb = new google.maps.LatLng(lintang,bujur);
+	  return lb;
+	  }
+	  function lokasisaya(infoWindow,map){
+	  var infoWindow = new google.maps.InfoWindow;
+          if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+			namalokasi("gps",pos.lat,pos.lng);
+            infoWindow.setPosition(pos);
+			a=ukurjarak(pos.lat,pos.lng,lintang.value,bujur.value);
+            infoWindow.setContent('<div style="word-wrap: break-word; width: 239px"><b>Lokasi Saya</b></br>'+'<div id="gps"></div>'+pos.lat+' Lintang Utara</br>'+pos.lng+' Bujur Barat</br>Radius = '+a.toLocaleString()+' meter</div>');
+            infoWindow.open(map);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+      }
+	  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Layanan GPS gagal' :
+                              'Peramban Anda tidak mendukung GPS');
+        infoWindow.open(map);
+      }
+
+function ukurjarak(lintang1, bujur1, lintang2, bujur2){ 
+    var R = 6378.137; // Jari-jari bumi dalam satuan km
+    var dlintang = lintang2 * Math.PI / 180 - lintang1 * Math.PI / 180;
+    var dbujur = bujur2 * Math.PI / 180 - bujur1 * Math.PI / 180;
+    var a = Math.sin(dlintang/2) * Math.sin(dlintang/2) +
+    Math.cos(lintang1 * Math.PI / 180) * Math.cos(lintang2 * Math.PI / 180) *
+    Math.sin(dbujur/2) * Math.sin(dbujur/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c;
+    return d * 1000; // meters
+}
+		function waktu() {
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth();
+			var yy = today.getFullYear();
+			var h = today.getHours();
+			var m = today.getMinutes();
+			var s = today.getSeconds();
+			//dd = checkTime(dd);
+			h = checkTime(h);
+			m = checkTime(m);
+			s = checkTime(s);
+			var namabulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+			document.getElementById('waktu').innerHTML = dd+" "+namabulan[mm]+" "+yy+" "+h + ":" + m + ":" + s + " WIB";
+			lat = marker1.getPosition().lat();
+			lng = marker1.getPosition().lng();
+			var t = setTimeout(waktu, 1000);
+		}
+		function checkTime(i) {
+		if (i < 10) {i = "0" + i};  // menambah digit 0 untuk satuan
+		return i;
+		}
+      function toggleBounce() {
+        if (marker1.getAnimation() !== null) {
+          marker1.setAnimation(null);
+        } else {
+          marker1.setAnimation(google.maps.Animation.BOUNCE);
+        }
+      }
+
+	  //tampilan panel kendali
+	  function toggleFloatingPanel() {
+        if(document.getElementById("floating-panel").style.visibility !== "hidden"){
+			document.getElementById("floating-panel").style.visibility = "hidden";
+			document.getElementById("hasilsimulasi").style.visibility = "hidden";
+			document.getElementById("hide-panel").style.visibility = "hidden";
+			document.getElementById("show-panel").style.visibility = "visible";
+			
+		} else {
+			document.getElementById("floating-panel").style.visibility = "visible";
+			document.getElementById("hide-panel").style.visibility = "visible";
+			document.getElementById("show-panel").style.visibility = "hidden";
+		}
+      }
+
+
+function aqi(){  
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+  if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    var myObj = JSON.parse(xmlhttp.responseText);
+	aqiindex.value = myObj.data[0].aqi;
+	kecepatanangin.value = myObj.data[0].wind_spd;
+	arahangin.value = myObj.data[0].wind_dir;
+	kelembapan.value = myObj.data[0].rh;
+	suhuudara.value = myObj.data[0].temp;
+	cuaca.value = myObj.data[0].weather.description;
+	//cuaca.value = cuaca.value.split(" ").join("%20");
+	icon = "https://www.weatherbit.io/static/img/icons/"+myObj.data[0].weather.icon+".png";
+	awan.src = icon;
+  }
+};
+var aa = "https://api.weatherbit.io/v2.0/current?lat="+lintang.value+"&lon="+bujur.value+"&key=b57ca6ae2ee04e68ba19f3a6299a6a3e&lang=id";
+xmlhttp.open('GET', aa, true);
+xmlhttp.send();
+}
+
+function namalokasi(nama,lintang,bujur){
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+  if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    var myObj = JSON.parse(xmlhttp.responseText);
+	document.getElementById(nama).innerHTML = '<div style="word-wrap: break-word; width: 239px">'+myObj.results[0].formatted_address+'</div>';
+	namalokasidetil.value = myObj.results[0].formatted_address;
+	document.getElementById("tautan").setAttribute("href",
+	"https://api.whatsapp.com/send?phone=628126038000&text=*https://durenmedan.uk*%0A%0A*Laporan*%20*Kejadian*%20*Kebakaran*%20*:*%0A"
+	+namalokasidetil.value.split(" ").join("%20")
+	+"%0A"
+	+lintang
+	+"%20Lintang%20Utara,%20"
+	+bujur
+	+"%20Bujur%20Barat%0A%0Ahttps://maps.google.com/?q="
+	+lintang
+	+","
+	+bujur
+	+"%0A%0A*ERP*%20*Sumbagut*%20*terdekat*%20*:*%0A"
+	+erpterdekat.value
+	+"%0A%0A*RS*%20*terdekat*%20*:*%0A"
+	+rsterdekat.value.split(" ").join("%20")
+	+"%0A%0A*Damkar*%20*terdekat*%20*:*%0A"
+	+damkarterdekat.value.split(" ").join("%20"))
+  }
+};
+var aa = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lintang+","+bujur+"&key=AIzaSyAx74v7Xf0TNQqF2wSUB5r-oEGBfnlls1Q";
+xmlhttp.open('GET', aa, true);
+xmlhttp.send();
+}
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx74v7Xf0TNQqF2wSUB5r-oEGBfnlls1Q&libraries=visualization,places,geometry,drawing&callback=initMap">
+    </script>
+  </body>
+</html>
