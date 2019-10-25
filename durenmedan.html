@@ -33,7 +33,7 @@
         right: 0%;
         padding: 0px;
         position: absolute;
-        bottom: -220px;
+        bottom: -223px;
 		visibility: hidden;
       }
 	  #tampilanawal {
@@ -128,13 +128,13 @@
 	  <div id="namadaerah"></div></div>
 	  <font size="2"><input type="text" id="lintang" value="4.017443" size="5"> Lintang Utara,</font><font size="2"><input type="text" id="bujur" value="98.275883" size="5"> Bujur Barat</font><hr>
 	  <b><font size="2">Kondisi Lingkungan</font></b><input type="hidden" id="namalokasidetil" value="">
-	  <table style="width:239px"><th style="width:200px">
+	  <table style="width:239px"><th style="width:209px">
 	  <font size="2">Air Quality Index <input type="text" id="aqiindex" size="1"></input> US AQI</font></br>
 	  <font size="2">Kecepatan Angin <input type="text" id="kecepatanangin" value=" " size="4"> m/s</font></br>
 	  <font size="2">Sudut Sumber Angin <input type="text" id="arahangin" value=" " size="1"> °</font></br>
 	  <font size="2">Kelembapan <input type="text" id="kelembapan" value=" " size="1"> %</font></br>
 	  <font size="2">Suhu Udara <input type="text" id="suhuudara" value=" " size="1"> °C</font></br>
-	  <font size="2">Cuaca <input type="text" id="cuaca" value=" " size="10"></th><th><img id="awan" src="" width="30"></th></font></table>
+	  <font size="2">Cuaca <input type="text" id="cuaca" value=" " size="10"></th><th style="vertical-align:bottom">U</br><img id="arah" src="https://raw.githubusercontent.com/durenmedan/durenmedan/master/panah.png" width="30" style="transform:rotate(0deg);"></br></br><img id="awan" src="" width="30"></th></font></table>
 	  <hr>
 	  <font size="2"><b>Data Penyaluran</b></br>
 	  Tekanan : <input type="text" id="tekanan" value="432.65" size="3"> psig</br>
@@ -948,6 +948,7 @@ xmlhttp.onreadystatechange = function() {
 	//cuaca.value = cuaca.value.split(" ").join("%20");
 	icon = "https://www.weatherbit.io/static/img/icons/"+myObj.data[0].weather.icon+".png";
 	awan.src = icon;
+	arah.style="transform:rotate("+arahangin.value+"deg)"
   }
 };
 var aa = "https://api.weatherbit.io/v2.0/current?lat="+lintang.value+"&lon="+bujur.value+"&key=b57ca6ae2ee04e68ba19f3a6299a6a3e&lang=id";
